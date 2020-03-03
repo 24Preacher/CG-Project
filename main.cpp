@@ -134,6 +134,62 @@ void drawBox (float comprimento, float largura, float altura, int divisoes){
 
 }
 
+
+void drawSphere (float radius, int slices, int stacks){
+    glBegin(GL_TRIANGLES);
+
+    float h_stack = 2*M_PI/stacks; //altura de cada stack
+    float a_slices = 2*M_PI / slices;
+    int i, j;
+    float alfa, beta = 0;
+
+    for(j=1; j<=stacks; j++){
+
+        alfa = 0;
+        for(i=1; i<=slices; i++){
+            glVertex3f((radius * cos(beta) * sin(alfa)), (radius * sin(beta)), (radius * cos(beta) * cos(alfa)));
+            glVertex3f((radius * cos(beta + h_stack) * sin(alfa)), (radius * sin(beta + h_stack)), (radius * cos(beta + h_stack) * cos(alfa)) );
+            glVertex3f((radius * cos(beta + h_stack) * sin(alfa + a_slices)), (radius * sin(beta + h_stack)), (radius * cos(beta + h_stack) * cos(alfa + a_slices)));
+
+            glVertex3f((radius * cos(beta) * sin(alfa)), (radius * sin(beta)), (radius * cos(beta) * cos(alfa)));
+            glVertex3f((radius * cos(beta + h_stack) * sin(alfa + a_slices)), (radius * sin(beta + h_stack)), (radius * cos(beta + h_stack) * cos(alfa + a_slices)));
+            glVertex3f((radius * cos(beta) * sin(alfa + a_slices)), (radius * sin(beta)), (radius * cos(beta) * cos(alfa + a_slices)));
+
+        alfa = i*a_slices;
+        }
+        beta = j * h_stack;
+    }
+
+
+glEnd();
+
+}
+
+
+
+
+void drawCone(float radius, float height, int slices, int stacks){
+    glBegin(GL_TRIANGLES);
+    int i, j;
+    float alt_stacks = height/stacks;
+    float ang_slices = 2 * M_PI / slices;
+
+    for(j=0; j<stacks; j++){
+        for(i=0; i<slices; i++){
+
+        }
+    }
+
+
+
+
+
+    glEnd();
+}
+
+
+
+
 void renderScene(void) {
 	float viewx, viewy, viewz;
 	viewx = cos(betaview)*sin(alfaview);
@@ -174,7 +230,8 @@ void renderScene(void) {
 	glColor3f(1.0f,1.0f,1.0f);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	//drawPlane(10.0,30.0);
-	drawBox(50.0,50.0,50.0,100);
+	//drawBox(50.0,50.0,50.0,100);
+	drawSphere(50, 100, 200);
 	// End of frame
 	glutSwapBuffers();
 }
