@@ -138,7 +138,7 @@ void drawBox (float comprimento, float largura, float altura, int divisoes){
 void drawSphere (float radius, int slices, int stacks){
     glBegin(GL_TRIANGLES);
 
-    float h_stack = 2*M_PI/stacks; //altura de cada stack
+    float h_stack = (M_PI/stacks); //altura de cada stack
     float a_slices = 2*M_PI / slices;
     int i, j;
     float alfa, beta = 0;
@@ -147,13 +147,13 @@ void drawSphere (float radius, int slices, int stacks){
 
         alfa = 0;
         for(i=1; i<=slices; i++){
-            glVertex3f((radius * cos(beta) * sin(alfa)), (radius * sin(beta)), (radius * cos(beta) * cos(alfa)));
-            glVertex3f((radius * cos(beta + h_stack) * sin(alfa)), (radius * sin(beta + h_stack)), (radius * cos(beta + h_stack) * cos(alfa)) );
-            glVertex3f((radius * cos(beta + h_stack) * sin(alfa + a_slices)), (radius * sin(beta + h_stack)), (radius * cos(beta + h_stack) * cos(alfa + a_slices)));
+            glVertex3f((radius * sin(beta) * sin(alfa)), (radius * cos(beta)), (radius * sin(beta) * cos(alfa))); //A
+            glVertex3f((radius * sin(beta + h_stack) * sin(alfa)), (radius * cos(beta + h_stack)), (radius * sin(beta + h_stack) * cos(alfa)) ); //B
+            glVertex3f((radius * sin(beta + h_stack) * sin(alfa + a_slices)), (radius * cos(beta + h_stack)), (radius * sin(beta + h_stack) * cos(alfa + a_slices))); //C
 
-            glVertex3f((radius * cos(beta) * sin(alfa)), (radius * sin(beta)), (radius * cos(beta) * cos(alfa)));
-            glVertex3f((radius * cos(beta + h_stack) * sin(alfa + a_slices)), (radius * sin(beta + h_stack)), (radius * cos(beta + h_stack) * cos(alfa + a_slices)));
-            glVertex3f((radius * cos(beta) * sin(alfa + a_slices)), (radius * sin(beta)), (radius * cos(beta) * cos(alfa + a_slices)));
+            glVertex3f((radius * sin(beta) * sin(alfa)), (radius * cos(beta)), (radius * sin(beta) * cos(alfa))); //A
+            glVertex3f((radius * sin(beta + h_stack) * sin(alfa + a_slices)), (radius * cos(beta + h_stack)), (radius * sin(beta + h_stack) * cos(alfa + a_slices))); //C
+            glVertex3f((radius * sin(beta) * sin(alfa + a_slices)), (radius * cos(beta)), (radius * sin(beta) * cos(alfa + a_slices))); //D
 
         alfa = i*a_slices;
         }
@@ -231,7 +231,7 @@ void renderScene(void) {
 	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	//drawPlane(10.0,30.0);
 	//drawBox(50.0,50.0,50.0,100);
-	drawSphere(50, 100, 200);
+	drawSphere(5, 10, 10);
 	// End of frame
 	glutSwapBuffers();
 }
