@@ -173,18 +173,76 @@ void drawCone(float radius, float height, int slices, int stacks){
     int i, j;
     float alt_stacks = height/stacks;
     float ang_slices = 2 * M_PI / slices;
+		float tempangulo;
+		float tempradius;
 
-    for(j=0; j<stacks; j++){
+  	//base
         for(i=0; i<slices; i++){
+					tempangulo = i*ang_slices;
+					glVertex3f(radius * sin(tempangulo),0,radius * cos(tempangulo));
+					glVertex3f(0,0,0);
+					glVertex3f(radius * sin(tempangulo + ang_slices),0,radius * cos(tempangulo + ang_slices));
+					}
 
-        }
-    }
+		//lados
+		tempradius = radius/stacks;
+			for(j=0; j<stacks; j++){
+				for(i=0; i<slices; i++){
+					tempangulo = i*ang_slices;
+					glVertex3f((radius - j*tempradius)*sin(tempangulo),alt_stacks*j,(radius - j*tempradius)*cos(tempangulo));
+					glVertex3f((radius - j*tempradius)*sin(tempangulo + ang_slices), alt_stacks*j,(radius - j*tempradius)*cos(tempangulo + ang_slices));
+					glVertex3f((radius - j*tempradius - tempradius)*sin(tempangulo + ang_slices), alt_stacks*j + alt_stacks ,(radius - j*tempradius - tempradius)*cos(tempangulo + ang_slices));
+					glVertex3f((radius - j*tempradius)*sin(tempangulo),alt_stacks*j,(radius - j*tempradius)*cos(tempangulo));
+					glVertex3f((radius - j*tempradius - tempradius)*sin(tempangulo + ang_slices), alt_stacks*j + alt_stacks ,(radius - j*tempradius - tempradius)*cos(tempangulo + ang_slices));
+					glVertex3f((radius - j*tempradius - tempradius)*sin(tempangulo),alt_stacks*j + alt_stacks,(radius - j*tempradius - tempradius)*cos(tempangulo));
 
 
-
-
+				}
+			}
 
     glEnd();
+}
+
+
+
+
+void drawCylinder(float radius, float height, int slices) {
+
+float n_angle = 2 * M_PI / slices; //angulo de casa slice
+float angle;
+for(int i = 0; i < slices; i++){
+    angle = n_angle * i;
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glBegin(GL_TRIANGLES);
+    //base de cima
+    //glColor3f (1.0, 0.0, 0.0);
+    glVertex3f(radius * cos(angle), height/2, radius * sin(angle));
+    glVertex3f(0, height/2, 0);
+    glVertex3f(radius*cos(angle + n_angle), height/2, radius * sin(angle + n_angle));
+
+    //lateral (triangulos virados para baixo)
+    //glColor3f (0.0, 1.0, 0.0);
+    glVertex3f(radius * cos(angle), height/2, radius * sin(angle));
+    glVertex3f(radius*cos(angle + n_angle), height/2, radius * sin(angle + n_angle));
+    glVertex3f(radius * cos(angle), -height/2, radius * sin(angle));
+
+    //lateral (triangulos virados para cima)
+    //glColor3f (0.0, 1.0, 0.0);
+    glVertex3f(radius*cos(angle + n_angle), height/2, radius * sin(angle + n_angle));
+    glVertex3f(radius*cos(angle + n_angle), -height/2, radius * sin(angle + n_angle));
+    glVertex3f(radius * cos(angle), -height/2, radius * sin(angle));
+
+    //base de baixo
+    //glColor3f (1.0, 0.0, 0.0);
+    glVertex3f(0, -height/2, 0);
+    glVertex3f(radius * cos(angle), -height/2, radius * sin(angle));
+    glVertex3f(radius*cos(angle + n_angle), -height/2, radius * sin(angle + n_angle));
+
+    glEnd();
+
+
+}
+
 }
 
 
@@ -231,7 +289,9 @@ void renderScene(void) {
 	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	//drawPlane(10.0,30.0);
 	//drawBox(50.0,50.0,50.0,100);
-	drawSphere(5, 10, 10);
+	//drawSphere(5, 10, 10);
+	//drawCone (50,200,50,50);
+	drawCylinder(10,20,20);
 	// End of frame
 	glutSwapBuffers();
 }
