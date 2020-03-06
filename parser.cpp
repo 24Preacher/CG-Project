@@ -1,4 +1,6 @@
 #include "../headers/parser.h"
+#include "../headers/tinyxml2.h
+
 using namespace std;
 using namespace tinyxml2;
 
