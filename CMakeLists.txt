@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Project Name
-PROJECT(class3)
-
+PROJECT(engine)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(ENGINE_FILES tinyxml2.cpp headers/tinyxml2.h parser.cpp headers/parser.h engine.cpp)
+add_executable(${PROJECT_NAME} ${ENGINE_FILES})
 
-add_executable(${PROJECT_NAME} main.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
@@ -22,7 +22,7 @@ if  (WIN32)
 	set(GLUT_DIR "" CACHE PATH "Path to GLUT folder")
 	if (NOT EXISTS "${GLUT_DIR}/GL/glut.h" OR NOT EXISTS "${GLUT_DIR}/glut32.lib")
 		message(ERROR ": GLUT not found")
-	endif (NOT EXISTS "${GLUT_DIR}/GL/glut.h" OR NOT EXISTS "${GLUT_DIR}/glut32.lib")	
+	endif (NOT EXISTS "${GLUT_DIR}/GL/glut.h" OR NOT EXISTS "${GLUT_DIR}/glut32.lib")
 	include_directories(${GLUT_DIR})
 	link_directories(${GLUT_DIR})
 	target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_DIR}/glut32.lib )
@@ -30,7 +30,7 @@ if  (WIN32)
 		file(COPY ${GLUT_DIR}/glut32.dll DESTINATION ${CMAKE_BINARY_DIR})
 	endif(EXISTS "${GLUT_DIR}/glut32.dll")
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-	
+
 else (WIN32) #Linux and Mac
 
 	set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} Wno-deprecated")
@@ -42,11 +42,11 @@ else (WIN32) #Linux and Mac
 	if(NOT GLUT_FOUND)
 	   message(ERROR ": GLUT not found!")
 	endif(NOT GLUT_FOUND)
-	
+
 endif(WIN32)
 
 
 
-
-
-
+PROJECT(generator)
+set(GENERATOR_FILES generator.cpp)
+add_executable(generator ${GENERATOR_FILES})

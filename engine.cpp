@@ -180,12 +180,13 @@ printf ( " |   ‣$ ./Engine <XML_INPUT_FILE>                                   
 printf ( " |                                                                                                  |\n");
 printf ( " |                                                                                                  |\n");
 printf ( " |      Controls :                                                                                  |\n");
-printf ( " |         Camera movement: wasd                                                                    |\n");
-printf ( " |         Zoom in: +                                                                               |\n");
-printf ( " |         Zoom out: -                                                                              |\n");
-printf ( " |         Full mode: f                                                                             |\n");
-printf ( " |         Points mode: p                                                                           |\n");
-printf ( " |         Lines mode: l                                                                            |\n");
+printf ( " |         move forward: w                                                                          |\n");
+printf ( " |         move backwards: s                                                                        |\n");
+printf ( " |         look left: a                                                                             |\n");
+printf ( " |         look right: d                                                                            |\n");
+printf ( " |         look up: UP KEY                                                                          |\n");
+printf ( " |         look down: DOWN KEY                                                                      |\n");
+printf ( " |         switch drawing mode: m                                                                   |\n");
 printf ( " |                                                                                                  |\n");
 printf ( " └--------------------------------------------------------------------------------------------------┘\n");
 }
