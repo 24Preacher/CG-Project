@@ -121,13 +121,12 @@ void make_Sphere (float radius, int slices, int stacks, const char* file){
             << (radius * sin(beta + h_stack) * sin(alfa + a_slices)) << ' ' <<
                      (radius * cos(beta + h_stack)) << ' ' <<
                      (radius * sin(beta + h_stack) * cos(alfa + a_slices)) << '\n'
-
-             << (radius * sin(beta + h_stack) * sin(alfa + a_slices)) << ' ' <<
-                (radius * cos(beta + h_stack)) << ' ' <<
-                (radius * sin(beta + h_stack) * cos(alfa + a_slices)) << '\n'
              << (radius * sin(beta) * sin(alfa)) << ' ' <<
                  (radius * cos(beta)) << ' ' <<
                 (radius * sin(beta) * cos(alfa)) << '\n'
+            << (radius * sin(beta + h_stack) * sin(alfa + a_slices)) << ' ' <<
+                (radius * cos(beta + h_stack)) << ' ' <<
+                (radius * sin(beta + h_stack) * cos(alfa + a_slices)) << '\n'
              << (radius * sin(beta) * sin(alfa + a_slices)) << ' ' <<
                 (radius * cos(beta)) << ' ' <<
                 (radius * sin(beta) * cos(alfa + a_slices)) << '\n';
