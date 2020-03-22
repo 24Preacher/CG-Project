@@ -181,11 +181,7 @@ void renderScene(void) {
     glutSolidTorus(1, 3, 10, 10);
     glPopMatrix();
 
-   // glPushMatrix();
-   // glTranslatef(5,0,5);
-   // glutSolidTeapot(20);
-   // glPopMatrix();
-    // End of frame
+
     glutSwapBuffers();
 }
 
@@ -252,9 +248,31 @@ void processSpecialKeys(int key, int xx, int yy) {
 }
 
 
+void help() {
+
+        printf ( " ┌-------------------------------------------------HELP---------------------------------------------┐\n");
+        printf ( " |                                                                                                  |\n");
+        printf ( " |                                                                                                  |\n");
+        printf ( " |                                                                                                  |\n");
+        printf ( " |      Controls :                                                                                  |\n");
+        printf ( " |         move forward: w                                                                          |\n");
+        printf ( " |         move backwards: s                                                                        |\n");
+        printf ( " |         look left: a                                                                             |\n");
+        printf ( " |         look right: d                                                                            |\n");
+        printf ( " |         look up: UP KEY                                                                          |\n");
+        printf ( " |         look down: DOWN KEY                                                                      |\n");
+        printf ( " |         switch drawing mode: m                                                                   |\n");
+        printf ( " |         switch tree seed: n                                                                      |\n");
+        printf ( " |                                                                                                  |\n");
+        printf ( " └--------------------------------------------------------------------------------------------------┘\n");
+}
+
 
 
 int main(int argc, char **argv) {
+
+
+    help();
 
 // init GLUT and the window
     glutInit(&argc, argv);
