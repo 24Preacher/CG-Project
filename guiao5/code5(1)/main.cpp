@@ -17,6 +17,7 @@ float dx,dy,dz;
 int mode = GL_LINE;
 float alfa = 0.0f, beta = 0.5f, radius = 100.0f;
 float camX, camY, camZ;
+int seed = 1;
 
 
 float normA (float x ,float y, float z){
@@ -70,14 +71,17 @@ void changeSize(int w, int h) {
 void arvores(int n){
 
     float x,z;
-    srand((unsigned int)time(NULL));
+    srand(seed);
     int i;
     float posX[n];
     float posZ[n];
     for(i = 0; i<n; i++){
 
-        posX[i] = ((float)rand()/(float)(RAND_MAX))*200.0 - 100.0;
-        posZ[i] = ((float)rand()/(float)(RAND_MAX))*200.0 - 100.0;
+      posX[i] = ((float)rand()/(float)(RAND_MAX))*200.0 - 100.0;
+      posZ[i] = ((float)rand()/(float)(RAND_MAX))*200.0 - 100.0;
+        if (normA(posX[i],0,posZ[i]) < 50)
+        i--;
+
 
     }
 
@@ -90,12 +94,34 @@ void arvores(int n){
         glPushMatrix();
         glTranslatef(x, 0, z);
         glRotatef(-90,1,0,0);
+        glColor3f(0.647059,0.164706,0.164706);
         glutSolidCone(1, 3, 4, 4);
         glTranslatef(0,0,2.5);
+        glColor3f(0.137255,0.556863,0.137255);
         glutSolidCone(3, 5, 10, 10);
         glPopMatrix();
 
 
+
+    }
+}
+
+void drawteepots(int number, float radius){
+  float alfa = 0;
+  float angleStep = 2*M_PI/number;
+  float px, pz;
+  int i=0;
+
+
+    for (i=0; i<number; i++){
+      px = radius * sin(alfa);
+      pz = radius * cos(alfa);
+      glPushMatrix();
+      glTranslatef(px,0.75,pz);
+      glRotatef(alfa*180/M_PI -90 ,0,1,0);
+      glutSolidTeapot(1);
+      alfa += angleStep;
+      glPopMatrix();
 
     }
 }
@@ -141,11 +167,18 @@ void renderScene(void) {
     glPolygonMode(GL_FRONT_AND_BACK,mode);
 
 
-    arvores(20);
+    arvores(100);
+
+    glColor3f(0,0,1);
+    drawteepots(6,15);
+
+    glColor3f(1,0,0);
+    drawteepots(24,35);
 
 
     glPushMatrix();
-    glutSolidTorus(2, 6, 10, 10);
+    glColor3f(0.737255,0.560784,0.560784);
+    glutSolidTorus(1, 3, 10, 10);
     glPopMatrix();
 
    // glPushMatrix();
@@ -188,6 +221,9 @@ void processKeys(unsigned char c, int xx, int yy) {
                 break;
             }
             break;
+        case 'n':
+            seed = rand();
+            break;
         default:
             break;
     }
@@ -218,17 +254,6 @@ void processSpecialKeys(int key, int xx, int yy) {
 
 
 
-void printInfo() {
-
-    printf("Vendor: %s\n", glGetString(GL_VENDOR));
-    printf("Renderer: %s\n", glGetString(GL_RENDERER));
-    printf("Version: %s\n", glGetString(GL_VERSION));
-
-    printf("\nUse Arrows to move the camera up/down and left/right\n");
-    printf("Home and End control the distance from the camera to the origin");
-}
-
-
 int main(int argc, char **argv) {
 
 // init GLUT and the window
@@ -248,11 +273,10 @@ int main(int argc, char **argv) {
 
 //  OpenGL settings
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
     //spherical2Cartesian();
 
-    printInfo();
 
 // enter GLUT's main cycle
     glutMainLoop();
