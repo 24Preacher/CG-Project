@@ -216,7 +216,31 @@ for(int i = 0; i < slices; i++){
   }
 }
   f.close();
+}
 
+void make_Torus(float inside_radius, float outside_radius, int slices, int stacks, const char* file){
+  float alfa, c, beta;
+  float a = 2*M_PI/slices;
+  float b = 2*M_PI/stacks;
+
+  ofstream f (file,ios::out| ios::trunc );
+  if(f.is_open()){
+    for(int i = 0; i<slices; i++){
+      alfa = i * a;
+
+      for(int j = 0; j <= stacks; j++){
+        beta = j * b;
+        f << (outside_radius + inside_radius * cos(beta)) * cos(alfa) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa) << '\n'
+          << (outside_radius + inside_radius * cos(beta)) * cos(alfa+a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa+a) << '\n'
+          << (outside_radius + inside_radius * cos(beta+b)) * cos(alfa+a) << ' ' << inside_radius * sin(beta+b) << ' ' << (outside_radius + inside_radius * cos(beta+b)) * sin(alfa+a) << '\n'
+
+          << (outside_radius + inside_radius * cos(beta)) * cos(alfa) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius *cos(beta)) * sin(alfa) << '\n'
+          << (outside_radius + inside_radius * cos(beta+b)) * cos(alfa+a) << ' ' << inside_radius * sin(beta+b) << ' ' << (outside_radius + inside_radius * cos(beta+b)) * sin(alfa+a) << '\n'
+          << (outside_radius + inside_radius * cos(beta+b)) * cos(alfa) << ' ' << inside_radius * sin(beta+b) << ' ' << (outside_radius + inside_radius * cos(beta+b)) * sin(alfa) << '\n';
+      }
+    }
+  }
+      f.close();
 }
 
 void help(){
@@ -240,7 +264,11 @@ printf ( " |       $ ./generator cone <RAIO_BASE> <ALTURA> <SLICES> <STACKS> <OU
 printf ( " |                                                                                                  |\n");
 printf ( " |   ‣ Cylinder                                                                                     |\n");
 printf ( " |                                                                                                  |\n");
-printf ( " |       $ ./generator cylinder <raio> <altura> <Slices>  <OUTPUT_FILE>                                |\n");
+printf ( " |       $ ./generator cylinder <raio> <altura> <Slices>  <OUTPUT_FILE>                             |\n");
+printf ( " |                                                                                                  |\n");
+printf ( " |   ‣ Torus                                                                                        |\n");
+printf ( " |                                                                                                  |\n");
+printf ( " |       $ ./generator torus <raio interior> <raio exterior> <Slices> <Stacks> <OUTPUT_FILE>        |\n");
 printf ( " |                                                                                                  |\n");
 printf ( " |                                                                                                  |\n");
 printf ( " └--------------------------------------------------------------------------------------------------┘\n");
@@ -296,6 +324,15 @@ std::string folder = "models/";
       folder.append(argv[5]);
       const char* file = folder.c_str();
       make_Cylinder(stof(argv[2]),stof(argv[3]),stof(argv[4]),file);
+    }
+  }
+  else if (!str.compare("torus")){
+    if (argc != 7)
+      printf("Invalid input. Try -help for help.\n");
+    else {
+      folder.append(argv[6]);
+      const char* file = folder.c_str();
+      make_Torus(stof(argv[2]),stof(argv[3]),stof(argv[4]),stof(argv[5]),file);
     }
   }
   else if (!str.compare("-help"))
