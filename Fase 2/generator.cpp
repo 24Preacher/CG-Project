@@ -230,13 +230,16 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
 
       for(int j = 0; j <= stacks; j++){
         beta = j * b;
-        f << (outside_radius + inside_radius * cos(beta)) * cos(alfa) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa) << '\n'
-          << (outside_radius + inside_radius * cos(beta)) * cos(alfa+a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa+a) << '\n'
-          << (outside_radius + inside_radius * cos(beta+b)) * cos(alfa+a) << ' ' << inside_radius * sin(beta+b) << ' ' << (outside_radius + inside_radius * cos(beta+b)) * sin(alfa+a) << '\n'
+        f 
+          << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius *cos(beta + b)) * sin(alfa) << '\n'
+          << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa + a) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius * cos(beta + b)) * sin(alfa + a) << '\n'
+          << (outside_radius + inside_radius * cos(beta)) * cos(alfa + a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa + a) << '\n'
+                
+          << (outside_radius + inside_radius * cos(beta)) * cos(alfa) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa) << '\n'
+          << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius * cos(beta + b)) * sin(alfa) << '\n'
+          << (outside_radius + inside_radius * cos(beta)) * cos(alfa + a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa + a) << '\n';
 
-          << (outside_radius + inside_radius * cos(beta)) * cos(alfa) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius *cos(beta)) * sin(alfa) << '\n'
-          << (outside_radius + inside_radius * cos(beta+b)) * cos(alfa+a) << ' ' << inside_radius * sin(beta+b) << ' ' << (outside_radius + inside_radius * cos(beta+b)) * sin(alfa+a) << '\n'
-          << (outside_radius + inside_radius * cos(beta+b)) * cos(alfa) << ' ' << inside_radius * sin(beta+b) << ' ' << (outside_radius + inside_radius * cos(beta+b)) * sin(alfa) << '\n';
+
       }
     }
   }
