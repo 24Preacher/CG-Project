@@ -8,10 +8,12 @@
 #include <math.h>
 #include "headers/parser.h"
 
+
 float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 2.0;
 float px=10,py=10,pz=10;
 float dx,dy,dz;
-pointsStruct points;
+pointsMatrix points;
+instructionsMatrix inst;
 int mode = GL_LINE;
 
 
@@ -54,14 +56,35 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+void runInstruction(int i , int j){
+	if(inst[i][j].getInstruction() == 'r'){
+		glRotatef(inst[i][j].getAngle(),inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
+	}
+	else if(inst[i][j].getInstruction() == 't'){
+		glTranslatef(inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
+	}
+	else if(inst[i][j].getInstruction() == 's'){
+		glScalef(inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
+	}
+	else if(inst[i][j].getInstruction() == 'c'){
+		glColor3f(inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
+	}
+}
 
 void drawPoints (){
   glBegin(GL_TRIANGLES);
-  glColor3f(1,1,1);
-  unsigned int i;
-  for(i=0;i<points.size();i++){
-    glVertex3f(points[i].x,points[i].y,points[i].z);
-  }
+  unsigned int i,j;
+	for(i=0;i<points.size();i++){
+		glPushMatrix();
+		for(j=0;j<inst[i].size();j++){
+			runInstruction(i,j);
+			}
+		for(j=0;j<points[i].size();j++){
+			glVertex3f(points[i][j].x,points[i][j].y,points[i][j].z);
+		}
+		glPopMatrix();
+	}
+
   glEnd();
 }
 
@@ -194,6 +217,8 @@ printf ( " └------------------------------------------------------------------
 
 int main(int argc, char **argv) {
   std::string arg = argv[1];
+	if(argc != 2 )
+	printf("invalid input\n");
   if(!arg.compare("-help")){
     help();
     return 1;
@@ -206,7 +231,11 @@ int main(int argc, char **argv) {
   std::copy(folder.begin(), folder.end(), path);
   path[folder.size()] = '\0';
 
- points = getpontos(path);
+ loadDoc (path,&points,&inst);
+
+// if (!(loadDoc (path,points,instructions))){
+// 	printf("invalid input \n");
+// }
 
 
 

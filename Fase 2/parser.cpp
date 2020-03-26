@@ -19,11 +19,11 @@ vector<string> split(const string& s, char delimiter)
 }
 
 
-void parseGroup(XMLNode* group, pointsStruct* pointsStruct, instructionsMatrix* instructionsMatrix, int* i){
+void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i){
   XMLNode* pParm;
   pParm = group -> FirstChildElement();
   float angle, scale, x, y, z;
-  int a = *i;
+  int j;
   while(pParm)
   {
         if ((strcmp (pParm -> Value(), "translate")) == 0){
@@ -49,7 +49,7 @@ void parseGroup(XMLNode* group, pointsStruct* pointsStruct, instructionsMatrix* 
           }
 
           Instruction in ('t',0,x,y,z);
-          instructionsMatrix[a].push_back(in);
+          (*instructionsMatrix)[*i].push_back(in);
         }
 
         else if ((strcmp (pParm -> Value(), "rotate")) == 0){
@@ -78,7 +78,7 @@ void parseGroup(XMLNode* group, pointsStruct* pointsStruct, instructionsMatrix* 
             z=0;
           }
           Instruction in ('r',angle,x,y,z);
-          instructionsMatrix[a].push_back(in);
+          (*instructionsMatrix)[*i].push_back(in);
         }
         else if ((strcmp (pParm -> Value(), "scale")) == 0){
           if (pParm -> ToElement() -> Attribute("X")){
@@ -100,7 +100,7 @@ void parseGroup(XMLNode* group, pointsStruct* pointsStruct, instructionsMatrix* 
             z=0;
           }
           Instruction in ('s',0,x,y,z);
-          instructionsMatrix[a].push_back(in);
+          (*instructionsMatrix)[*i].push_back(in);
         }
         else if ((strcmp (pParm -> Value(), "color")) == 0){
           if (pParm -> ToElement() -> Attribute("Red")){
@@ -121,74 +121,44 @@ void parseGroup(XMLNode* group, pointsStruct* pointsStruct, instructionsMatrix* 
           else{
             z=0;
           }
-          Instruction in ('c',0,x,y,z);
-          instructionsMatrix[a].push_back(in);
+          Instruction in ('c',0,x/255,y/255,z/255);
+          (*instructionsMatrix)[*i].push_back(in);
         }
         else if ((strcmp (pParm -> Value(), "group")) == 0){
-          a++;
-          parseGroup(pParm, pointsStruct, instructionsMatrix, &a);
+          instructions insts; // vector de instrucoes vazio
+          pointsStruct pontos; // vector de pontos vazio
+          (*instructionsMatrix).push_back(insts);
+          (*pointsMatrix).push_back(pontos);
+          for (j=0;j<instructionsMatrix[*i].size();j++){
+            instructionsMatrix[*i+1] = instructionsMatrix[*i];
+            }
+        *i++;
+
+          parseGroup(pParm, pointsMatrix, instructionsMatrix, i);
         }
         else if ((strcmp (pParm -> Value(), "models")) == 0){
-          parseModels(pParm, pointsStruct, instructionsMatrix, &a);
+          parseModels(pParm, pointsMatrix, instructionsMatrix, i);
         }
       pParm = pParm->NextSiblingElement();
   }
 }
 
-void parseModels (XMLNode* pNode, pointsStruct* pointsStruct, instructionsMatrix* instructionsMatrix, int* i){
-  XMLElement *pParm;
+void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i){
+  XMLNode* pParm;
   pParm = pNode -> FirstChildElement();
-  int a=0;
+  int a=0, n;
   std::string file;
   std::vector<std::string> files;
   while(pParm)
   {
-      file = pParm->Attribute("file");
+      file = pParm-> ToElement() -> Attribute("file");
       files.push_back(file);
       pParm = pParm->NextSiblingElement();
       a++;
   }
-
-
-}
-
-vector<string> getfiles (char* path){
-
-    std::vector<string> files;
-    XMLDocument doc;
-    tinyxml2::XMLError flag = doc.LoadFile(path);
-if(!flag){
-    XMLElement *pRoot, *pParm;
-    pRoot = doc.FirstChildElement();
-    if(pRoot)
-    {
-        pParm = pRoot->FirstChildElement();
-        int i = 0; // for sorting the entries
-        std::string file;
-        while(pParm)
-        {
-            file = pParm->Attribute("file");
-            files.push_back(file);
-            pParm = pParm->NextSiblingElement();
-            i++;
-        }
-        int it;
-
-    }
-
-
-    }
-    return files;
-}
-
-
-std::vector<Ponto> getpontos(char* path){
-  int i;
-  vector<string> files = getfiles(path);
-  std::vector<Ponto> pontos;
-  for(i=0;i<files.size();i++){
+  for(n=0;n<files.size();n++){
     ifstream infile;
-    infile.open(files[i]);
+    infile.open(files[n]);
     if(infile.is_open()){
       std::string line;
 
@@ -201,11 +171,37 @@ std::vector<Ponto> getpontos(char* path){
       (*p).x = stof(tokens[0],nullptr);
       (*p).y = stof(tokens[1],nullptr);
       (*p).z = stof(tokens[2],nullptr);
-      pontos.push_back(*p);
+      (*pointsMatrix)[*i].push_back(*p);
     }
   }
     infile.close();
-    }
-    return pontos;
+ }
+}
 
+
+int loadDoc(char* path,  pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix ) {
+    XMLDocument doc;
+    tinyxml2::XMLError flag = doc.LoadFile(path);
+
+    if(!flag){
+      XMLNode *scene = doc.FirstChild();
+      if(scene == nullptr){
+      return XML_ERROR_FILE_READ_ERROR;
+    }
+
+    XMLNode *group = scene -> FirstChildElement("group");
+    int i = 0;
+    if(group == nullptr) return XML_ERROR_PARSING_ELEMENT;
+    while(group){
+    instructions insts; // vector de instrucoes vazio
+    pointsStruct pontos; // vector de pontos vazio
+    (*instructionsMatrix).push_back(insts);
+    (*pointsMatrix).push_back(pontos);
+    parseGroup(group,pointsMatrix,instructionsMatrix,&i);
+    i++;
+    group = group -> NextSiblingElement("group");
+  }
+  return 1;
+}
+return 0;
 }

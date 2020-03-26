@@ -25,9 +25,9 @@ typedef std::vector<Instruction> instructions;
 typedef std::vector<instructions> instructionsMatrix;
 
 
-
+void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i);
+void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i);
 vector<string> split(const string& s, char delimiter);
-vector<string> getfiles (char* path);
-vector<Ponto> getpontos(char* path);
+int loadDoc(char* path,  pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix );
 
 #endif

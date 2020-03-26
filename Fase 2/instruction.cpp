@@ -1,4 +1,4 @@
-#include "instruction.h"
+#include "headers/instruction.h"
 
 char Instruction::getInstruction () {
         return this->instruction;
