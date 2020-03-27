@@ -57,6 +57,7 @@ void changeSize(int w, int h) {
 }
 
 void runInstruction(int i , int j){
+
 	if(inst[i][j].getInstruction() == 'r'){
 		glRotatef(inst[i][j].getAngle(),inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
 	}
@@ -72,20 +73,24 @@ void runInstruction(int i , int j){
 }
 
 void drawPoints (){
-  glBegin(GL_TRIANGLES);
   unsigned int i,j;
+
+printf("points size :%d\n",points.size());
+printf("inst size :%d\n",inst.size());
 	for(i=0;i<points.size();i++){
+		printf("points[%d] size :%d\n",i,points[i].size());
+		printf("inst[%d] size :%d\n",i,inst[i].size());
 		glPushMatrix();
 		for(j=0;j<inst[i].size();j++){
 			runInstruction(i,j);
 			}
+		glBegin(GL_TRIANGLES);
 		for(j=0;j<points[i].size();j++){
 			glVertex3f(points[i][j].x,points[i][j].y,points[i][j].z);
 		}
+		glEnd();
 		glPopMatrix();
 	}
-
-  glEnd();
 }
 
 void renderScene(void) {
@@ -233,9 +238,7 @@ int main(int argc, char **argv) {
 
  loadDoc (path,&points,&inst);
 
-// if (!(loadDoc (path,points,instructions))){
-// 	printf("invalid input \n");
-// }
+
 
 
 

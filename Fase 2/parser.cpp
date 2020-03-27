@@ -23,7 +23,6 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
   XMLNode* pParm;
   pParm = group -> FirstChildElement();
   float angle, scale, x, y, z;
-  int j;
   while(pParm)
   {
         if ((strcmp (pParm -> Value(), "translate")) == 0){
@@ -47,7 +46,6 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
           else{
             z=0;
           }
-
           Instruction in ('t',0,x,y,z);
           (*instructionsMatrix)[*i].push_back(in);
         }
@@ -59,20 +57,20 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
           else{
             angle=0;
           }
-          if (pParm -> ToElement() -> Attribute("axisX")){
-            x = stof(pParm -> ToElement() -> Attribute("axisX"));
+          if (pParm -> ToElement() -> Attribute("X")){
+            x = stof(pParm -> ToElement() -> Attribute("X"));
           }
           else{
             x=0;
           }
-          if (pParm -> ToElement() -> Attribute("axisY")){
-            y = stof(pParm -> ToElement() -> Attribute("axisY"));
+          if (pParm -> ToElement() -> Attribute("Y")){
+            y = stof(pParm -> ToElement() -> Attribute("Y"));
           }
           else{
             y=0;
           }
-          if (pParm -> ToElement() -> Attribute("axisZ")){
-            z = stof(pParm -> ToElement() -> Attribute("axisZ"));
+          if (pParm -> ToElement() -> Attribute("Z")){
+            z = stof(pParm -> ToElement() -> Attribute("Z"));
           }
           else{
             z=0;
@@ -102,7 +100,7 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
           Instruction in ('s',0,x,y,z);
           (*instructionsMatrix)[*i].push_back(in);
         }
-        else if ((strcmp (pParm -> Value(), "color")) == 0){
+        else if ((strcmp (pParm -> Value(), "colour")) == 0){
           if (pParm -> ToElement() -> Attribute("Red")){
             x = stof(pParm -> ToElement() -> Attribute("Red"));
           }
@@ -126,13 +124,14 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
         }
         else if ((strcmp (pParm -> Value(), "group")) == 0){
           instructions insts; // vector de instrucoes vazio
-          pointsStruct pontos; // vector de pontos vazio
+          unsigned int j;
+          for (j=0;j<(*instructionsMatrix)[*i].size();j++){
+            insts.push_back((*instructionsMatrix)[*i][j]);
+          }
           (*instructionsMatrix).push_back(insts);
+          pointsStruct pontos; // vector de pontos vazio
           (*pointsMatrix).push_back(pontos);
-          for (j=0;j<instructionsMatrix[*i].size();j++){
-            instructionsMatrix[*i+1] = instructionsMatrix[*i];
-            }
-        *i++;
+          (*i)++;
 
           parseGroup(pParm, pointsMatrix, instructionsMatrix, i);
         }
