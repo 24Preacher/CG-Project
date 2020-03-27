@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name
 PROJECT(engine)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set(ENGINE_FILES tinyxml2.cpp headers/tinyxml2.h parser.cpp headers/parser.h engine.cpp)
+set(ENGINE_FILES tinyxml2.cpp headers/tinyxml2.h instruction.cpp headers/instruction.h parser.cpp headers/parser.h engine.cpp)
 add_executable(${PROJECT_NAME} ${ENGINE_FILES})
 
 
