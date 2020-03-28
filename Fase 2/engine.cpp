@@ -78,7 +78,7 @@ void drawModel(int i){
 	for(j=0;j<points[i].size();j++){
 		glVertex3f(points[i][j].x,points[i][j].y,points[i][j].z);
 	}
-	glEnd();	
+	glEnd();
 }
 
 void drawPoints (){
@@ -248,7 +248,7 @@ int main(int argc, char **argv) {
  glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
  glutInitWindowPosition(100,100);
  glutInitWindowSize(800,800);
- glutCreateWindow("3D ENGINE @ CG 18/19");
+ glutCreateWindow("3D ENGINE @ CG 19/20");
 
  glClearColor(0,0,0,0) ;
  glClear(GL_COLOR_BUFFER_BIT);
