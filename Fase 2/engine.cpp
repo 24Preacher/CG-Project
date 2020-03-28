@@ -72,23 +72,24 @@ void runInstruction(int i , int j){
 	}
 }
 
+void drawModel(int i){
+	glBegin(GL_TRIANGLES);
+	unsigned int j;
+	for(j=0;j<points[i].size();j++){
+		glVertex3f(points[i][j].x,points[i][j].y,points[i][j].z);
+	}
+	glEnd();	
+}
+
 void drawPoints (){
   unsigned int i,j;
 
-printf("points size :%d\n",points.size());
-printf("inst size :%d\n",inst.size());
 	for(i=0;i<points.size();i++){
-		printf("points[%d] size :%d\n",i,points[i].size());
-		printf("inst[%d] size :%d\n",i,inst[i].size());
 		glPushMatrix();
 		for(j=0;j<inst[i].size();j++){
 			runInstruction(i,j);
 			}
-		glBegin(GL_TRIANGLES);
-		for(j=0;j<points[i].size();j++){
-			glVertex3f(points[i][j].x,points[i][j].y,points[i][j].z);
-		}
-		glEnd();
+			drawModel(i);
 		glPopMatrix();
 	}
 }

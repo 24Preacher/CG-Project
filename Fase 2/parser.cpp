@@ -23,6 +23,8 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
   XMLNode* pParm;
   pParm = group -> FirstChildElement();
   float angle, scale, x, y, z;
+  int num = *i;
+
   while(pParm)
   {
         if ((strcmp (pParm -> Value(), "translate")) == 0){
@@ -124,15 +126,15 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
         }
         else if ((strcmp (pParm -> Value(), "group")) == 0){
           instructions insts; // vector de instrucoes vazio
-          unsigned int j;
-          for (j=0;j<(*instructionsMatrix)[*i].size();j++){
-            insts.push_back((*instructionsMatrix)[*i][j]);
-          }
+            unsigned int j;
+            for (j=0;j<(*instructionsMatrix)[num].size();j++){
+              insts.push_back((*instructionsMatrix)[num][j]);
+            }
+
           (*instructionsMatrix).push_back(insts);
           pointsStruct pontos; // vector de pontos vazio
           (*pointsMatrix).push_back(pontos);
           (*i)++;
-
           parseGroup(pParm, pointsMatrix, instructionsMatrix, i);
         }
         else if ((strcmp (pParm -> Value(), "models")) == 0){
