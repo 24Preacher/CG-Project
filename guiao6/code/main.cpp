@@ -16,9 +16,6 @@
 #include <GL/glut.h>
 #endif
 
-float height=2.0f;
-float x = 0.0f;
-float z = 0.0f;
 
 
 float px = 0, py = 0, pz = 0;
