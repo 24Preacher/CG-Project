@@ -11,7 +11,25 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="36c7b2fd-0e4a-4af5-a906-f09401d51a0a" name="Default Changelist" comment="" />
+    <list default="true" id="36c7b2fd-0e4a-4af5-a906-f09401d51a0a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/class6.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/class6.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/class6.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/code/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,7 +39,11 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1ZrcFJLswUf0uGa8r9Nhyx0IRHJ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -55,6 +77,8 @@
       <workItem from="1585674080979" duration="8259000" />
       <workItem from="1586726452774" duration="9000" />
       <workItem from="1586816645693" duration="4314000" />
+      <workItem from="1587163253301" duration="607000" />
+      <workItem from="1587311461651" duration="20000" />
     </task>
     <servers />
   </component>

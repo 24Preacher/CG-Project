@@ -90,8 +90,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/home/addams/Downloads/CLion-2019.3.5/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake"
   "/home/addams/Downloads/CLion-2019.3.5/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/Compiler/zOS-C-DetermineCompiler.cmake"
   "/home/addams/Downloads/CLion-2019.3.5/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake"
-  "/home/addams/Downloads/CLion-2019.3.5/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/FindDevIL.cmake"
-  "/home/addams/Downloads/CLion-2019.3.5/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/FindGLEW.cmake"
   "/home/addams/Downloads/CLion-2019.3.5/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/FindGLUT.cmake"
   "/home/addams/Downloads/CLion-2019.3.5/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/FindOpenGL.cmake"
   "/home/addams/Downloads/CLion-2019.3.5/clion-2019.3.5/bin/cmake/linux/share/cmake-3.15/Modules/FindPackageHandleStandardArgs.cmake"
@@ -126,5 +124,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/class6.dir/DependInfo.cmake"
+  "CMakeFiles/class8.dir/DependInfo.cmake"
   )

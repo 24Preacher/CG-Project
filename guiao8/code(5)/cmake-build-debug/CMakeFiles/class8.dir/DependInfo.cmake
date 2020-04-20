@@ -4,13 +4,12 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/addams/Desktop/CG-Project/guiao6/code/main.cpp" "/home/addams/Desktop/CG-Project/guiao6/code/cmake-build-debug/CMakeFiles/class6.dir/main.cpp.o"
+  "/home/addams/Desktop/Universidade/CG/ficha8/code(5)/catmull-rom.cpp" "/home/addams/Desktop/Universidade/CG/ficha8/code(5)/cmake-build-debug/CMakeFiles/class8.dir/catmull-rom.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/usr/include/IL"
   )
 
 # Targets to which this target links.
