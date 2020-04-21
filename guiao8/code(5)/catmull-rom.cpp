@@ -12,11 +12,17 @@
 float camX = 0, camY, camZ = 5;
 int startX, startY, tracking = 0;
 
+float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 2.0;
+float px=10,py=10,pz=10;
+float dx,dy,dz;
+int mode = GL_LINE;
+int curva = 0;
+
 int alpha = 0, beta = 0, r = 5;
 
 #define POINT_COUNT 5
 // Points that make up the loop for catmull-rom interpolation
-float p[POINT_COUNT][3] = {{-1,-1,0},{-1,1,0},{1,1,0},{0,0,0},{1,-1,0}};
+float p[POINT_COUNT][3] = {{-10,0,-10},{-10,0,10},{10,0,10},{0,0,0},{10,0,-10}};
 
 void buildRotMatrix(float *x, float *y, float *z, float *m) {
 
@@ -62,26 +68,139 @@ void multMatrixVector(float *m, float *v, float *res) {
 
 }
 
+float normA (float x ,float y, float z){
+    return sqrt(x*x + y*y + z*z);
+}
+
+void normaliza (float* x ,float* y, float* z){
+    float xx= *x, yy = *y, zz= *z;
+    float norma = normA (xx,yy,zz);
+    *x = xx/norma;
+    *y = yy/norma;
+    *z = zz/norma;
+}
+
+
+void processKeys(unsigned char c, int xx, int yy) {
+
+    switch (c) {
+        case 'd':
+            alfaview -= M_PI/64;
+            break;
+        case 'a':
+            alfaview += M_PI/64;
+            break;
+        case 'w':
+            px += step*dx;
+            py += step*dy;
+            pz += step*dz;
+            break;
+        case 's':
+            px -= step*dx;
+            py -= step*dy;
+            pz -= step*dz;
+            break;
+        case 'm':
+            if(mode == GL_LINE){
+                mode = GL_POINT;
+                break;
+            }else if(mode == GL_POINT){
+                mode = GL_FILL;
+                break;
+            }else if(mode == GL_FILL){
+                mode = GL_LINE;
+                break;
+            }
+            break;
+				 case 'h':
+		          if (curva == 0){
+							curva = 1;
+							}
+							else if(curva == 1) {
+							curva = 2;
+							}
+							else{
+							curva = 0;
+							}
+		          break;
+        default:
+            break;
+    }
+    glutPostRedisplay();
+}
+
+void processSpecialKeys(int key, int xx, int yy) {
+
+    switch (key) {
+        case GLUT_KEY_UP :
+            betaview += M_PI/64;
+            if (betaview > M_PI/3)
+                betaview = M_PI / 3;
+            break;
+        case GLUT_KEY_DOWN:
+            betaview -= M_PI/64;
+            if (betaview < -M_PI/3)
+                betaview = -M_PI / 3;
+            break;
+        default:
+            break;
+    }
+
+    glutPostRedisplay();
+
+}
+
 
 void getCatmullRomPoint(float t, float *p0, float *p1, float *p2, float *p3, float *pos, float *deriv) {
 
 	// catmull-rom matrix
-	float m[4][4] = {	{-0.5f,  1.5f, -1.5f,  0.5f},
-						{ 1.0f, -2.5f,  2.0f, -0.5f},
-						{-0.5f,  0.0f,  0.5f,  0.0f},
-						{ 0.0f,  1.0f,  0.0f,  0.0f}};
-			
+		float	m[4][4] = {	{-0.5f,  1.5f, -1.5f,  0.5f},
+										{ 1.0f, -2.5f,  2.0f, -0.5f},
+										{-0.5f,  0.0f,  0.5f,  0.0f},
+										{ 0.0f,  1.0f,  0.0f,  0.0f}};
+
+	// hermite cubic curve
+	 	float h[4][4] = {	{2.0f,  -2.0f, 1.0f,  1.0f},
+										{-3.0f, 3.0f,  -2.0f, -1.0f},
+										{0.0f,  0.0f,  1.0f,  0.0f},
+										{1.0f,  0.0f,  0.0f,  0.0f}};
+
+	// bezier cubic curves
+		float b[4][4] = {	{-1.0f,  3.0f, -3.0f,  1.0f},
+									 	{ 3.0f, -6.0f,  3.0f, 0.0f},
+										{-3.0f,  3.0f,  0.0f,  0.0f},
+									 	{ 1.0f,  0.0f,  0.0f,  0.0f} };
+
+
 	// Compute A = M * P
 	float a[4][4] = {0};
 
+
+if (curva==0){
 	float pX[4] = {p0[0], p1[0], p2[0], p3[0]};
 	float pY[4] = {p0[1], p1[1], p2[1], p3[1]};
 	float pZ[4] = {p0[2], p1[2], p2[2], p3[2]};
 	multMatrixVector(*m, pX, a[0]);
 	multMatrixVector(*m, pY, a[1]);
 	multMatrixVector(*m, pZ, a[2]);
+}
+else if(curva == 1){
+	float pX[4] = {p0[0], p1[0], p2[0], p3[0]};
+	float pY[4] = {p0[1], p1[1], p2[1], p3[1]};
+	float pZ[4] = {p0[2], p1[2], p2[2], p3[2]};
+	multMatrixVector(*h, pX, a[0]);
+	multMatrixVector(*h, pY, a[1]);
+	multMatrixVector(*h, pZ, a[2]);
+}
+else if(curva == 2){
+	float pX[4] = {p0[0], p1[0], p2[0], p3[0]};
+	float pY[4] = {p0[1], p1[1], p2[1], p3[1]};
+	float pZ[4] = {p0[2], p1[2], p2[2], p3[2]};
+	multMatrixVector(*b, pX, a[0]);
+	multMatrixVector(*b, pY, a[1]);
+	multMatrixVector(*b, pZ, a[2]);
+}
 
-	
 	// Compute pos = T * A
 	// multiplicar vetor dos t's por A
 	//slide 2
@@ -107,10 +226,10 @@ void getGlobalCatmullRomPoint(float gt, float *pos, float *deriv) {
 	t = t - index; // where within  the segment
 
 	// indices store the points
-	int indices[4]; 
-	indices[0] = (index + POINT_COUNT-1)%POINT_COUNT;	
+	int indices[4];
+	indices[0] = (index + POINT_COUNT-1)%POINT_COUNT;
 	indices[1] = (indices[0]+1)%POINT_COUNT;
-	indices[2] = (indices[1]+1)%POINT_COUNT; 
+	indices[2] = (indices[1]+1)%POINT_COUNT;
 	indices[3] = (indices[2]+1)%POINT_COUNT;
 
 	getCatmullRomPoint(t, p[indices[0]], p[indices[1]], p[indices[2]], p[indices[3]], pos, deriv);
@@ -124,13 +243,13 @@ void changeSize(int w, int h) {
 	if(h == 0)
 		h = 1;
 
-	// compute window's aspect ratio 
+	// compute window's aspect ratio
 	float ratio = w * 1.0 / h;
 
 	// Reset the coordinate system before modifying
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	
+
 	// Set the viewport to be the entire window
     glViewport(0, 0, w, h);
 
@@ -150,7 +269,7 @@ void renderCatmullRomCurve() {
     for(i=0; i<100; i++){
         //temos que ir buscar os pontos
         //'gt' tem que estar entre 0 e 1 -> i/100
-        getGlobalCatmullRomPoint(i/1000.0, pos, deriv);
+        getGlobalCatmullRomPoint(i/100.0, pos, deriv);
         glVertex3f(pos[0], pos[1], pos[2]);
     }
 
@@ -163,21 +282,46 @@ void renderCatmullRomCurve() {
 
 void renderScene(void) {
 
+	float viewx, viewy, viewz;
+	viewx = cos(betaview)*sin(alfaview);
+	viewy = sin(betaview);
+	viewz = cos(betaview)*cos(alfaview);
+
+	normaliza (&viewx,&viewy,&viewz);
+	dx = viewx;
+	dy = viewy;
+	dz = viewz;
+
 	static float t = 0;
-    float pos[4], deriv[4], z[4], y[4] = {0,0,1}, m[16];
+    float pos[4], deriv[4], z[4], y[4] = {0,1,0}, m[16];
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glLoadIdentity();
-	gluLookAt(camX, camY, camZ, 
-		      0.0,0.0,0.0,
-			  0.0f,1.0f,0.0f);
-
+	gluLookAt(px, py, pz,
+						px + dx, py + dy, pz + dz,
+						0.0f,1.0f,0.0f);
+		glColor3f(1,0,0);
 	renderCatmullRomCurve();
 
 	// apply transformations here
 	// ...
     getGlobalCatmullRomPoint(t,pos, deriv);
+
+		// Eixos Ordenados.
+		glBegin(GL_LINES);
+		glColor3f(1.0f,0.0f,0.0f);
+		glVertex3f(-100.0f,0.0f,0.0f);
+		glVertex3f(100.0f,0.0f,0.0f);
+
+		glColor3f(0.0f,1.0f,0.0f);
+		glVertex3f(0.0f,-100.0f,0.0f);
+		glVertex3f(0.0f,100.0f,0.0f);
+
+		glColor3f(0.0f,0.0f,1.0f);
+		glVertex3f(0.0f,0.0f,-100.0f);
+		glVertex3f(0.0f,0.0f,100.0f);
+		glEnd();
 
 
     normalize(deriv);
@@ -191,15 +335,21 @@ void renderScene(void) {
     glPushMatrix();
     glTranslatef(pos[0], pos[1], pos[2]);
     glMultMatrixf(m);
-	glutWireTeapot(0.1);
+		glColor3f(0.5f,1.0f,0.5f);
+		glPushMatrix();
+		glRotatef(90.0,0,1,0);
+	glutWireCone(1,2,10,10);
     glPopMatrix();
+		glColor3f(1,1,1);
+		glutWireTeapot(1);
+		glPopMatrix();
 
 	glutSwapBuffers();
-	t+=0.00001;
+	t+=0.001;
 }
 
 
-void processMouseButtons(int button, int state, int xx, int yy) 
+void processMouseButtons(int button, int state, int xx, int yy)
 {
 	if (state == GLUT_DOWN)  {
 		startX = xx;
@@ -217,7 +367,7 @@ void processMouseButtons(int button, int state, int xx, int yy)
 			beta += (yy - startY);
 		}
 		else if (tracking == 2) {
-			
+
 			r -= yy - startY;
 			if (r < 3)
 				r = 3.0;
@@ -271,10 +421,10 @@ int main(int argc, char **argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA);
 	glutInitWindowPosition(100,100);
-	glutInitWindowSize(320,320);
+	glutInitWindowSize(800,800);
 	glutCreateWindow("CG@DI-UM");
-		
-// callback registration 
+
+// callback registration
 	glutDisplayFunc(renderScene);
 	glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
@@ -282,14 +432,15 @@ int main(int argc, char **argv) {
 // mouse callbacks
 	glutMouseFunc(processMouseButtons);
 	glutMotionFunc(processMouseMotion);
+	glutKeyboardFunc(processKeys);
+	glutSpecialFunc(processSpecialKeys);
 
 // OpenGL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-// enter GLUT's main cycle 
+// enter GLUT's main cycle
 	glutMainLoop();
-	
+
 	return 1;
 }
-
