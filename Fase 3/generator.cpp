@@ -5,8 +5,9 @@
 #include <fstream>
 #include <math.h>
 using namespace std;
-
-
+#include <vector>
+#include <sstream>
+#include "headers/parser.h"
 
 void make_Plane (float comprimento, float largura, const char* file){
   ofstream f (file, ios::out| ios::trunc );
@@ -230,11 +231,11 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
 
       for(int j = 0; j <= stacks; j++){
         beta = j * b;
-        f 
+        f
           << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius *cos(beta + b)) * sin(alfa) << '\n'
           << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa + a) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius * cos(beta + b)) * sin(alfa + a) << '\n'
           << (outside_radius + inside_radius * cos(beta)) * cos(alfa + a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa + a) << '\n'
-                
+
           << (outside_radius + inside_radius * cos(beta)) * cos(alfa) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa) << '\n'
           << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius * cos(beta + b)) * sin(alfa) << '\n'
           << (outside_radius + inside_radius * cos(beta)) * cos(alfa + a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa + a) << '\n';
@@ -245,6 +246,85 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
   }
       f.close();
 }
+
+vector<string> split(const string& s, char delimiter)
+{
+    std::vector<string> tokens;
+    std::string token;
+    std::istringstream ss(s);
+    while (getline(ss, token, delimiter))
+    {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
+
+// No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
+void bezier_patches() {
+
+  int nBezier = 0;
+  int ncontrolPoints = 0;
+  const int nPatch = 16; //podemos definir como variavel global
+  int tesselation = 0;
+  int bezier = 0;
+  int i,j;
+  std::ifstream f;
+  string aux,aux2;
+  f.open("teapot.patch");
+  std::vector<Ponto> pontos;
+
+
+  if ( f.is_open() ) {
+
+      getline(f, aux);
+      nBezier = stoi(aux);
+      printf("Numero de Bezier Patches %d\n", nBezier );
+      int iPatches[nBezier][nPatch];
+      std::vector<string> tokens;
+
+
+      //de 0 a 31 -> indices dos pontos controlo, 16 cada
+        for( i = 0; i < nBezier ;i++ ) {
+          std::string line;
+          getline(f,line);
+          tokens = split(line, ' ');
+          for( j = 0; j < nPatch ; j++ ) {
+            //iPatches[i][j] = stoi(tokens[0],nullptr);
+
+          }
+          //int aux2 = stoi(line);
+          for( int u = 0; u < tokens.size(); u++){
+            iPatches[i][u] = stoi(tokens[u]);
+          }
+        }
+
+        for(int v = 0; v < 32; v++){
+          for(int y = 0; y < 16; y++)
+            printf("%d ", iPatches[v][y]);
+            printf("\n");
+        }
+
+    printf("Bezier chegou ao final com o valor -> %d que tem de ser 32\n", bezier );
+    getline(f,aux2);
+    ncontrolPoints = stoi(aux2);
+    printf("Numero de control points %d\n", ncontrolPoints);
+
+    for( int z = 0; z < ncontrolPoints; z++ ){
+      std::string line1;
+      getline(f,line1);
+      tokens = split(line1, ',');
+      pontos.reserve(ncontrolPoints);
+      Ponto *p = new Ponto();
+      (*p).x = stof(tokens[0],nullptr);
+      (*p).y = stof(tokens[1],nullptr);
+      (*p).z = stof(tokens[2],nullptr);
+      pontos.push_back(*p);
+    }
+  }
+
+  f.close();
+}
+
 
 void help(){
 printf ( " ┌------------------------------------------- PRIMITIVES -------------------------------------------┐\n");
@@ -337,6 +417,9 @@ std::string folder = "models/";
       const char* file = folder.c_str();
       make_Torus(stof(argv[2]),stof(argv[3]),stof(argv[4]),stof(argv[5]),file);
     }
+  }
+  else if(!str.compare("bezier")){
+    bezier_patches();
   }
   else if (!str.compare("-help"))
      help();
