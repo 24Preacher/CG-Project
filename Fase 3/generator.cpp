@@ -448,7 +448,7 @@ Shape* bezier_patches(float tesselation, char* file) {
           (*p2).y = (res[i][2])->y;
           (*p2).z = (res[i][2])->z;
 
-/*
+
           //0,1,3
           shape->inserePonto(p0);
           shape->inserePonto(p1);
@@ -457,7 +457,7 @@ Shape* bezier_patches(float tesselation, char* file) {
           shape->inserePonto(p0);
           shape->inserePonto(p3);
           shape->inserePonto(p2);
-*/
+
 
       }
     }

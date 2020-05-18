@@ -8,7 +8,7 @@
 #include <vector>
 #include <cstdlib>
 
-#include "Shape.h"
+#include "headers/Shape.h"
 
 using namespace std;
 
@@ -16,34 +16,36 @@ using namespace std;
 void Shape::inserePonto(Ponto* p){
     this->Pontos.push_back(p);
 }
-/*
-Point* Shape::getPoint(int i) {
-    return this->Points.at(i);
+
+
+Ponto* Shape::getPoint(int i) {
+    return this->Pontos.at(i);
 }
 
 int Shape::getSize(){
-    return this->Points.size();
+    return this->Pontos.size();
 }
 
-void Shape::vbo() {
-    float *vertex = (float *) malloc(sizeof(float) * 3 * this->Points.size());
-    int index = 0;
-    for (int i = 0; i < this->Points.size(); i++) {
-        vertex[index] = this->Points[i]->getX();
-        vertex[index + 1] = this->Points[i]->getY();
-        vertex[index + 2] = this->Points[i]->getZ();
-        index += 3;
-    }
+// void Shape::vbo() {
+//     float *vertex = (float *) malloc(sizeof(float) * 3 * this->Pontos.size());
+//     int index = 0;
+//     for (int i = 0; i < this->Pontos.size(); i++) {
+//         vertex[index] = this->Pontos[i]->getX();
+//         vertex[index + 1] = this->Pontos[i]->getY();
+//         vertex[index + 2] = this->Pontos[i]->getZ();
+//         index += 3;
+//     }
+//
+//     glGenBuffers(1, &buffer);
+//     glBindBuffer(GL_ARRAY_BUFFER, buffer);
+//     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * index, vertex, GL_STATIC_DRAW);
+//
+//     free(vertex);
+// }
 
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * index, vertex, GL_STATIC_DRAW);
-
-    free(vertex);
-}
-*/
-    void Shape::draw(){
-        glBindBuffer(GL_ARRAY_BUFFER,buffer);
-        glVertexPointer(3,GL_FLOAT,0, 0);
-        glDrawArrays(GL_TRIANGLES,0,getSize()*3);
-    }
+    //
+    // void Shape::draw(){
+    //     glBindBuffer(GL_ARRAY_BUFFER,buffer);
+    //     glVertexPointer(3,GL_FLOAT,0, 0);
+    //     glDrawArrays(GL_TRIANGLES,0,getSize()*3);
+    // }

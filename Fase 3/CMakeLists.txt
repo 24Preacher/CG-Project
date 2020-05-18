@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 # Project Name
 PROJECT(engine)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(ENGINE_FILES tinyxml2.cpp headers/tinyxml2.h instruction.cpp headers/instruction.h parser.cpp headers/parser.h engine.cpp)
 add_executable(${PROJECT_NAME} ${ENGINE_FILES})
@@ -33,6 +35,8 @@ if  (WIN32)
 
 else (WIN32) #Linux and Mac
 
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED on)
 	set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} Wno-deprecated")
 	find_package(GLUT REQUIRED)
 	include_directories(${GLUT_INCLUDE_DIR})
@@ -48,5 +52,5 @@ endif(WIN32)
 
 
 PROJECT(generator)
-set(GENERATOR_FILES generator.cpp)
+set(GENERATOR_FILES Shape.cpp headers/Shape.h generator.cpp )
 add_executable(generator ${GENERATOR_FILES})

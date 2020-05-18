@@ -21,10 +21,10 @@ private:
 
 public:
     void inserePonto(Ponto*);
-  //  Ponto* getPoint(int);
-  //  int getSize();
-  //  void vbo();
-  //  void draw();
+    Ponto* getPoint(int);
+    int getSize();
+    void vbo();
+    void draw();
 
 };
 
