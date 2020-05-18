@@ -1,13 +1,29 @@
 
+#include <stdlib.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glew.h>
+#include <GL/glut.h>
+#endif
 #include <iostream>
 #include <string>
 #include <cstring>
 #include <fstream>
 #include <math.h>
-using namespace std;
+
 #include <vector>
 #include <sstream>
 #include "headers/parser.h"
+#include "headers/Shape.h"
+
+
+using namespace std;
+//32*16 = 512
+int indices[512][16];
+const int nPatch = 16;
+
+
 
 void make_Plane (float comprimento, float largura, const char* file){
   ofstream f (file, ios::out| ios::trunc );
@@ -247,6 +263,10 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
       f.close();
 }
 
+
+//-------------resolução da addams
+
+
 vector<string> split(const string& s, char delimiter)
 {
     std::vector<string> tokens;
@@ -259,27 +279,97 @@ vector<string> split(const string& s, char delimiter)
     return tokens;
 }
 
+
+
+Ponto* pontosBezier(float *p1, float *p2, float *p3, float *p4, float t){
+    float x = (1 - t);
+    float ponto[3];
+
+    //ver slides das curvas - bezier curves degree 3
+    float x0,x1,x2,x3;
+    x0 = pow(x, 3);
+    x1 = 3 * x * pow(x,2) * t;
+    x2 = 3 * x * pow(t,2);
+    x3 = pow(t,3);
+
+    ponto[0] = x0*p1[0] + x1*p2[0] + x2*p3[0] + x3*p4[0];
+    ponto[1] = x0*p1[1] + x1*p2[1] + x2*p3[1] + x3*p4[1];
+    ponto[2] = x0*p1[2] + x1*p2[2] + x2*p3[2] + x3*p4[2];
+
+
+    Ponto *p = new Ponto();
+    (*p).x = ponto[0];
+    (*p).y = ponto[1];
+    (*p).z = ponto[2];
+
+    return p;
+
+
+}
+
+
+
+
+
+
+
+//ver slides das curvas - bezier patches (pontos verdes- control points e ponto vermelho- ponto no patch)
+//nos patches usa-se o u em vez do t
+//temos que obter 4 pontos (control points) para o calculo de bezier
+Ponto* calcBezierPatch(float **controlPoints, int np, float u, float v){
+    int n = 16;
+    float aux[n][3], res[n][3];
+    Ponto *p, *ponto;
+
+    int j=0, w=0;
+    for(int i=0; i<n; i++){
+      aux[j][0] = controlPoints[indices[np][i]][0];
+      aux[j][1] = controlPoints[indices[np][i]][1];
+      aux[j][2] = controlPoints[indices[np][i]][2];
+      j++;
+      //j é multiplo de 4 pq são precisos 4 pontos para cada calculo de Bezier
+      if(j % 4 == 0){
+        p = pontosBezier(aux[0], aux[1], aux[2], aux[3], u);
+        res[w][0] = p->x;
+        res[w][1] = p->y;
+        res[w][2] = p->z;
+
+        w++;
+        j=0;
+
+      }
+
+    }
+    ponto = pontosBezier(res[0], res[1], res[2], res[3], v);
+    return ponto;
+}
+
+
 // No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
-void bezier_patches() {
+// função para fazer parse do ficheiro
+Shape* bezier_patches(float tesselation, char* file) {
+  std::ifstream f;
+  f.open(file);
 
   int nBezier = 0;
   int ncontrolPoints = 0;
   const int nPatch = 16; //podemos definir como variavel global
-  int tesselation = 0;
   int bezier = 0;
   int i,j;
-  std::ifstream f;
+  Shape* shape = new Shape();
   string aux,aux2;
-  f.open("teapot.patch");
   std::vector<Ponto> pontos;
-
+  float **iPatches; //indices
 
   if ( f.is_open() ) {
 
       getline(f, aux);
       nBezier = stoi(aux);
       printf("Numero de Bezier Patches %d\n", nBezier );
-      int iPatches[nBezier][nPatch];
+
+
+
+
       std::vector<string> tokens;
 
 
@@ -289,7 +379,7 @@ void bezier_patches() {
           getline(f,line);
           tokens = split(line, ' ');
           for( j = 0; j < nPatch ; j++ ) {
-            //iPatches[i][j] = stoi(tokens[0],nullptr);
+            iPatches[i][j] = stoi(tokens[0],nullptr);
 
           }
           //int aux2 = stoi(line);
@@ -298,15 +388,9 @@ void bezier_patches() {
           }
         }
 
-        for(int v = 0; v < 32; v++){
-          for(int y = 0; y < 16; y++)
-            printf("%d ", iPatches[v][y]);
-            printf("\n");
-        }
-
     printf("Bezier chegou ao final com o valor -> %d que tem de ser 32\n", bezier );
     getline(f,aux2);
-    ncontrolPoints = stoi(aux2);
+    ncontrolPoints = stoi(aux2); //nmr de control points
     printf("Numero de control points %d\n", ncontrolPoints);
 
     for( int z = 0; z < ncontrolPoints; z++ ){
@@ -323,6 +407,64 @@ void bezier_patches() {
   }
 
   f.close();
+
+
+  float u1, v1, u2, v2, inc = 1.0/tesselation;
+  Ponto* res[nBezier][4];
+
+  for(int i=0; i<nBezier; i++){
+    for(int j=0; j<tesselation; j++){
+      for(int w=0; w<tesselation; w++){
+          u1 = j*inc;
+          v1 = w*inc;
+          u2 = (j+1)*inc;
+          v2 = (w+1)*inc;
+
+          res[i][0] = calcBezierPatch(iPatches, i, u1, v1);
+          res[i][1] = calcBezierPatch(iPatches, i, u2, v1);
+          res[i][2] = calcBezierPatch(iPatches, i, u1, v2);
+          res[i][3] = calcBezierPatch(iPatches, i, u2,v2);
+
+
+
+          Ponto *p0 = new Ponto();
+          (*p0).x = (res[i][0])->x;
+          (*p0).y = (res[i][0])->y;
+          (*p0).z = (res[i][0])->z;
+
+          Ponto *p1 = new Ponto();
+          (*p1).x = (res[i][1])->x;
+          (*p1).y = (res[i][1])->y;
+          (*p1).z = (res[i][1])->z;
+
+          Ponto *p3 = new Ponto();
+          (*p3).x = (res[i][3])->x;
+          (*p3).y = (res[i][3])->y;
+          (*p3).z = (res[i][3])->z;
+
+
+          Ponto *p2 = new Ponto();
+          (*p2).x = (res[i][2])->x;
+          (*p2).y = (res[i][2])->y;
+          (*p2).z = (res[i][2])->z;
+
+/*
+          //0,1,3
+          shape->inserePonto(p0);
+          shape->inserePonto(p1);
+          shape->inserePonto(p3);
+          //0,3,2
+          shape->inserePonto(p0);
+          shape->inserePonto(p3);
+          shape->inserePonto(p2);
+*/
+
+      }
+    }
+  }
+
+ return shape;
+
 }
 
 
@@ -419,7 +561,7 @@ std::string folder = "models/";
     }
   }
   else if(!str.compare("bezier")){
-    bezier_patches();
+    //bezier_patches();
   }
   else if (!str.compare("-help"))
      help();

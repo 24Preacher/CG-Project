@@ -1,5 +1,6 @@
 #ifndef parser_h
 #define parser_h
+#include <GL/gl.h>
 
 #include "tinyxml2.h"
 #include "instruction.h"
@@ -19,6 +20,10 @@ typedef struct {
   float z;
 } Ponto;
 
+
+
+
+
 typedef std::vector<Ponto> pointsStruct;
 typedef std::vector<pointsStruct> pointsMatrix;
 typedef std::vector<Instruction> instructions;
@@ -29,5 +34,8 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
 void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i);
 vector<string> split(const string& s, char delimiter);
 int loadDoc(char* path,  pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix );
+
+
+
 
 #endif
