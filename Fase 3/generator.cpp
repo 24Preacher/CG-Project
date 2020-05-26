@@ -20,7 +20,7 @@
 
 using namespace std;
 //32*16 = 512
-int indices[512][16];
+int indices[32][16];
 const int nPatch = 16;
 
 
@@ -316,16 +316,16 @@ Ponto* pontosBezier(float *p1, float *p2, float *p3, float *p4, float t){
 //ver slides das curvas - bezier patches (pontos verdes- control points e ponto vermelho- ponto no patch)
 //nos patches usa-se o u em vez do t
 //temos que obter 4 pontos (control points) para o calculo de bezier
-Ponto* calcBezierPatch(float **controlPoints, int np, float u, float v){
+Ponto* calcBezierPatch(std::vector<Ponto> controlPoints, int np, float u, float v){
     int n = 16;
     float aux[n][3], res[n][3];
     Ponto *p, *ponto;
 
     int j=0, w=0;
     for(int i=0; i<n; i++){
-      aux[j][0] = controlPoints[indices[np][i]][0];
-      aux[j][1] = controlPoints[indices[np][i]][1];
-      aux[j][2] = controlPoints[indices[np][i]][2];
+      aux[j][0] = controlPoints[indices[np][i]].x;
+      aux[j][1] = controlPoints[indices[np][i]].y;
+      aux[j][2] = controlPoints[indices[np][i]].z;
       j++;
       //j é multiplo de 4 pq são precisos 4 pontos para cada calculo de Bezier
       if(j % 4 == 0){
@@ -347,23 +347,22 @@ Ponto* calcBezierPatch(float **controlPoints, int np, float u, float v){
 
 // No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
 // função para fazer parse do ficheiro
-Shape* bezier_patches(float tesselation, char* file) {
+Shape* bezier_patches(int tesselation, const string& file) {
   std::ifstream f;
   f.open(file);
 
   int nBezier = 0;
   int ncontrolPoints = 0;
-  const int nPatch = 16; //podemos definir como variavel global
   int bezier = 0;
   int i,j;
   Shape* shape = new Shape();
   string aux,aux2;
   std::vector<Ponto> pontos;
-  float **iPatches; //indices
 
   if ( f.is_open() ) {
 
       getline(f, aux);
+      printf("%s\n", aux.c_str() );
       nBezier = stoi(aux);
       printf("Numero de Bezier Patches %d\n", nBezier );
 
@@ -379,20 +378,20 @@ Shape* bezier_patches(float tesselation, char* file) {
           getline(f,line);
           tokens = split(line, ' ');
           for( j = 0; j < nPatch ; j++ ) {
-            iPatches[i][j] = stoi(tokens[0],nullptr);
+            indices[i][j] = stoi(tokens[j],nullptr);
 
           }
           //int aux2 = stoi(line);
           for( int u = 0; u < tokens.size(); u++){
-            iPatches[i][u] = stoi(tokens[u]);
+            indices[i][u] = stoi(tokens[u]);
+            printf("%d\n", indices[i][u] );
           }
         }
 
-    printf("Bezier chegou ao final com o valor -> %d que tem de ser 32\n", bezier );
+    printf("Bezier chegou ao final com o valor -> %d que tem de ser 32\n", nBezier );
     getline(f,aux2);
     ncontrolPoints = stoi(aux2); //nmr de control points
     printf("Numero de control points %d\n", ncontrolPoints);
-
     for( int z = 0; z < ncontrolPoints; z++ ){
       std::string line1;
       getline(f,line1);
@@ -403,6 +402,7 @@ Shape* bezier_patches(float tesselation, char* file) {
       (*p).y = stof(tokens[1],nullptr);
       (*p).z = stof(tokens[2],nullptr);
       pontos.push_back(*p);
+      printf("control z=%d : %f,%f,%f\n",z,(*p).x,(*p).y,(*p).z );
     }
   }
 
@@ -420,10 +420,10 @@ Shape* bezier_patches(float tesselation, char* file) {
           u2 = (j+1)*inc;
           v2 = (w+1)*inc;
 
-          res[i][0] = calcBezierPatch(iPatches, i, u1, v1);
-          res[i][1] = calcBezierPatch(iPatches, i, u2, v1);
-          res[i][2] = calcBezierPatch(iPatches, i, u1, v2);
-          res[i][3] = calcBezierPatch(iPatches, i, u2,v2);
+          res[i][0] = calcBezierPatch(pontos, i, u1, v1);
+          res[i][1] = calcBezierPatch(pontos, i, u2, v1);
+          res[i][2] = calcBezierPatch(pontos, i, u1, v2);
+          res[i][3] = calcBezierPatch(pontos, i, u2,v2);
 
 
 
@@ -462,6 +462,8 @@ Shape* bezier_patches(float tesselation, char* file) {
       }
     }
   }
+
+  shape->print();
 
  return shape;
 
@@ -561,7 +563,8 @@ std::string folder = "models/";
     }
   }
   else if(!str.compare("bezier")){
-    //bezier_patches();
+
+    bezier_patches(10, "teapot.patch");
   }
   else if (!str.compare("-help"))
      help();
