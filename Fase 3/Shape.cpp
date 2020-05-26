@@ -50,14 +50,17 @@ void Shape::draw(){
         glDrawArrays(GL_TRIANGLES,0,getSize()*3);
 }
 
-void Shape::print(){
+void Shape::print(const char* file){
   int i;
-  float x,y,z;
-  for(i=0;i<this->Pontos.size();i++){
-    x =this->Pontos.at(i)->x;
-    y =this->Pontos.at(i)->y;
-    z =this->Pontos.at(i)-> z;
 
-    printf("(%f,%f,%f)\n",x,y,z);
+  ofstream f (file,ios::out| ios::trunc );
+  if( f.is_open() ) {
+    for(i=0;i<this->Pontos.size();i++){
+     f << this->Pontos.at(i)->x << ' '
+       << this->Pontos.at(i)->y << ' '
+       << this->Pontos.at(i)->z << '\n';
+
+    }
   }
+    f.close();
 }

@@ -347,7 +347,7 @@ Ponto* calcBezierPatch(std::vector<Ponto> controlPoints, int np, float u, float 
 
 // No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
 // função para fazer parse do ficheiro
-Shape* bezier_patches(int tesselation, const string& file) {
+Shape* bezier_patches(int tesselation, const char* file, const char* file2) {
   std::ifstream f;
   f.open(file);
 
@@ -362,15 +362,9 @@ Shape* bezier_patches(int tesselation, const string& file) {
   if ( f.is_open() ) {
 
       getline(f, aux);
-      printf("%s\n", aux.c_str() );
       nBezier = stoi(aux);
-      printf("Numero de Bezier Patches %d\n", nBezier );
-
-
-
 
       std::vector<string> tokens;
-
 
       //de 0 a 31 -> indices dos pontos controlo, 16 cada
         for( i = 0; i < nBezier ;i++ ) {
@@ -384,14 +378,11 @@ Shape* bezier_patches(int tesselation, const string& file) {
           //int aux2 = stoi(line);
           for( int u = 0; u < tokens.size(); u++){
             indices[i][u] = stoi(tokens[u]);
-            printf("%d\n", indices[i][u] );
           }
         }
 
-    printf("Bezier chegou ao final com o valor -> %d que tem de ser 32\n", nBezier );
     getline(f,aux2);
     ncontrolPoints = stoi(aux2); //nmr de control points
-    printf("Numero de control points %d\n", ncontrolPoints);
     for( int z = 0; z < ncontrolPoints; z++ ){
       std::string line1;
       getline(f,line1);
@@ -402,7 +393,6 @@ Shape* bezier_patches(int tesselation, const string& file) {
       (*p).y = stof(tokens[1],nullptr);
       (*p).z = stof(tokens[2],nullptr);
       pontos.push_back(*p);
-      printf("control z=%d : %f,%f,%f\n",z,(*p).x,(*p).y,(*p).z );
     }
   }
 
@@ -462,8 +452,7 @@ Shape* bezier_patches(int tesselation, const string& file) {
       }
     }
   }
-
-  shape->print();
+ shape->print(file2);
 
  return shape;
 
@@ -563,8 +552,13 @@ std::string folder = "models/";
     }
   }
   else if(!str.compare("bezier")){
-
-    bezier_patches(10, "teapot.patch");
+    if (argc != 5)
+      printf("Invalid input. Try -help for help.\n");
+    else {
+      folder.append(argv[4]);
+      const char* file = folder.c_str();
+      bezier_patches(stoi(argv[2]), argv[3], file );
+    }
   }
   else if (!str.compare("-help"))
      help();

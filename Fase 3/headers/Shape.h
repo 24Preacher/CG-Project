@@ -25,7 +25,7 @@ public:
     int getSize();
     void vbo();
     void draw();
-    void print();
+    void print(const char*);
 };
 
 #endif
