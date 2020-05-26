@@ -11,6 +11,7 @@
 #include <cstring>
 #include <fstream>
 #include <math.h>
+#include <stdio.h>
 
 #include <vector>
 #include <sstream>
@@ -347,7 +348,7 @@ Ponto* calcBezierPatch(std::vector<Ponto> controlPoints, int np, float u, float 
 
 // No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
 // função para fazer parse do ficheiro
-Shape* bezier_patches(int tesselation, const char* file, const char* file2) {
+void bezier_patches(int tesselation, const char* file, const char* file2) {
   std::ifstream f;
   f.open(file);
 
@@ -355,9 +356,9 @@ Shape* bezier_patches(int tesselation, const char* file, const char* file2) {
   int ncontrolPoints = 0;
   int bezier = 0;
   int i,j;
-  Shape* shape = new Shape();
   string aux,aux2;
   std::vector<Ponto> pontos;
+
 
   if ( f.is_open() ) {
 
@@ -403,6 +404,7 @@ Shape* bezier_patches(int tesselation, const char* file, const char* file2) {
   Ponto* res[nBezier][4];
 
   for(int i=0; i<nBezier; i++){
+    Shape* shape = new Shape();
     for(int j=0; j<tesselation; j++){
       for(int w=0; w<tesselation; w++){
           u1 = j*inc;
@@ -452,9 +454,8 @@ Shape* bezier_patches(int tesselation, const char* file, const char* file2) {
       }
     }
   }
- shape->print(file2);
+  shape->print(file2);
 
- return shape;
 
 }
 

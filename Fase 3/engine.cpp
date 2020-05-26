@@ -9,7 +9,7 @@
 #include "headers/parser.h"
 
 
-float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 2.0;
+float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 0.2;
 float px=10,py=10,pz=10;
 float dx,dy,dz;
 pointsMatrix points;
