@@ -1,12 +1,14 @@
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
+#include <GL/glew.h>
 #include <GL/glut.h>
 #endif
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "headers/parser.h"
+#include "headers/catmullRom.h"
 
 
 float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 0.2;
@@ -60,6 +62,9 @@ void runInstruction(int i , int j){
 
 	if(inst[i][j].getInstruction() == 'r'){
 		glRotatef(inst[i][j].getAngle(),inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
+	}
+	else if(inst[i][j].getInstruction() == 'T'){
+		renderCatmullRomCurve(inst[i][j].getPontos());
 	}
 	else if(inst[i][j].getInstruction() == 't'){
 		glTranslatef(inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());

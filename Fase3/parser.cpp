@@ -24,8 +24,6 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
   pParm = group -> FirstChildElement();
   float angle, scale, x, y, z,time;
   int num = *i;
-  printf("5\n" );
-
 
   while(pParm)
   {
@@ -139,7 +137,7 @@ void parseTranslation (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsM
   if (pNode -> ToElement() -> Attribute("time")){
     time = stof(pNode -> ToElement() -> Attribute("time"));
     pParm = pNode -> FirstChildElement();
-    Instruction in ('t',time,0,0,0,0);
+    Instruction in ('T',time,0,0,0,0);
     while(pParm)
     {
       if (pParm -> ToElement() -> Attribute("X")){

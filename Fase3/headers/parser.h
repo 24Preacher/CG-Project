@@ -18,11 +18,11 @@ using namespace tinyxml2;
 
 
 
-void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i);
-void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i);
-void parseTranslation (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i);
-vector<string> split(const string& s, char delimiter);
-int loadDoc(char* path,  pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix );
+void parseGroup(XMLNode* , pointsMatrix* , instructionsMatrix* , int* );
+void parseModels (XMLNode* , pointsMatrix* , instructionsMatrix* , int* );
+void parseTranslation (XMLNode* , pointsMatrix* , instructionsMatrix* , int* );
+vector<string> split(const string& , char );
+int loadDoc(char* ,  pointsMatrix* , instructionsMatrix*  );
 
 
 

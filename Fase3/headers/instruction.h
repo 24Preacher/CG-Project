@@ -38,6 +38,8 @@ public:
 
     void print();
 
+    std::vector<Ponto*> getPontos();
+
     void addPonto(Ponto*);
 
     void setInstruction (char);

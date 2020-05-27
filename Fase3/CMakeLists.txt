@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(HEADERS /home/groot14/Desktop/CG2020/CG-Project/Fase3/headers)
 include_directories(${HEADERS})
-set(ENGINE_FILES tinyxml2.cpp headers/tinyxml2.h headers/Shape.h Shape.cpp instruction.cpp headers/instruction.h parser.cpp headers/parser.h engine.cpp)
+set(ENGINE_FILES tinyxml2.cpp headers/tinyxml2.h headers/Shape.h Shape.cpp headers/catmullRom.h catmullRom.cpp instruction.cpp headers/instruction.h parser.cpp headers/parser.h engine.cpp)
 add_executable(${PROJECT_NAME} ${ENGINE_FILES})
 
 

@@ -23,6 +23,10 @@ float Instruction::getAngle () {
         return this->z;
     }
 
+    std::vector<Ponto*> Instruction::getPontos(){
+      return this->pontos;
+    }
+
     void Instruction::setInstruction (char instruction) {
         this->instruction = instruction;
     }
