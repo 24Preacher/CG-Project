@@ -76,7 +76,7 @@ void drawModel(int i){
 	glBegin(GL_TRIANGLES);
 	unsigned int j;
 	for(j=0;j<points[i].size();j++){
-		glVertex3f(points[i][j].x,points[i][j].y,points[i][j].z);
+		glVertex3f(points[i][j]->x,points[i][j]->y,points[i][j]->z);
 	}
 	glEnd();
 }
@@ -235,8 +235,6 @@ int main(int argc, char **argv) {
   folder.append(arg);
   char * path = new char[folder.size() + 1];
   std::copy(folder.begin(), folder.end(), path);
-  path[folder.size()] = '\0';
-
  loadDoc (path,&points,&inst);
 
 

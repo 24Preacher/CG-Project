@@ -22,34 +22,15 @@ vector<string> split(const string& s, char delimiter)
 void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i){
   XMLNode* pParm;
   pParm = group -> FirstChildElement();
-  float angle, scale, x, y, z;
+  float angle, scale, x, y, z,time;
   int num = *i;
+  printf("5\n" );
+
 
   while(pParm)
   {
         if ((strcmp (pParm -> Value(), "translate")) == 0){
-          if (pParm -> ToElement() -> Attribute("X")){
-            x = stof(pParm -> ToElement() -> Attribute("X"));
-          }
-          else{
-            x=0;
-          }
-
-          if (pParm -> ToElement() -> Attribute("Y")){
-            y = stof(pParm -> ToElement() -> Attribute("Y"));
-          }
-          else{
-            y=0;
-          }
-
-          if (pParm -> ToElement() -> Attribute("Z")){
-            z = stof(pParm -> ToElement() -> Attribute("Z"));
-          }
-          else{
-            z=0;
-          }
-          Instruction in ('t',0,x,y,z);
-          (*instructionsMatrix)[*i].push_back(in);
+          parseTranslation(pParm,pointsMatrix,instructionsMatrix,i);
         }
 
         else if ((strcmp (pParm -> Value(), "rotate")) == 0){
@@ -59,6 +40,12 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
           else{
             angle=0;
           }
+          if (pParm -> ToElement() -> Attribute("time")){
+            time = stof(pParm -> ToElement() -> Attribute("time"));
+          }
+          else{
+            time=0;
+          }
           if (pParm -> ToElement() -> Attribute("X")){
             x = stof(pParm -> ToElement() -> Attribute("X"));
           }
@@ -77,7 +64,7 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
           else{
             z=0;
           }
-          Instruction in ('r',angle,x,y,z);
+          Instruction in ('r',time,angle,x,y,z);
           (*instructionsMatrix)[*i].push_back(in);
         }
         else if ((strcmp (pParm -> Value(), "scale")) == 0){
@@ -99,7 +86,7 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
           else{
             z=0;
           }
-          Instruction in ('s',0,x,y,z);
+          Instruction in ('s',0,0,x,y,z);
           (*instructionsMatrix)[*i].push_back(in);
         }
         else if ((strcmp (pParm -> Value(), "colour")) == 0){
@@ -121,7 +108,7 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
           else{
             z=0;
           }
-          Instruction in ('c',0,x/255,y/255,z/255);
+          Instruction in ('c',0,0,x/255,y/255,z/255);
           (*instructionsMatrix)[*i].push_back(in);
         }
         else if ((strcmp (pParm -> Value(), "group")) == 0){
@@ -144,18 +131,92 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
   }
 }
 
+
+void parseTranslation (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i){
+  XMLNode* pParm;
+  float x,y,z,time;
+
+  if (pNode -> ToElement() -> Attribute("time")){
+    time = stof(pNode -> ToElement() -> Attribute("time"));
+    pParm = pNode -> FirstChildElement();
+    Instruction in ('t',time,0,0,0,0);
+    while(pParm)
+    {
+      if (pParm -> ToElement() -> Attribute("X")){
+        x = stof(pParm -> ToElement() -> Attribute("X"));
+      }
+      else{
+        x=0;
+      }
+
+      if (pParm -> ToElement() -> Attribute("Y")){
+        y = stof(pParm -> ToElement() -> Attribute("Y"));
+      }
+      else{
+        y=0;
+      }
+
+      if (pParm -> ToElement() -> Attribute("Z")){
+        z = stof(pParm -> ToElement() -> Attribute("Z"));
+      }
+      else{
+        z=0;
+      }
+
+      Ponto *p = new Ponto();
+      (*p).x = x;
+      (*p).y = y;
+      (*p).z = z;
+
+        in.addPonto(p);
+
+        pParm = pParm->NextSiblingElement();
+    }
+      (*instructionsMatrix)[*i].push_back(in);
+
+  }
+  else{
+    time=0;
+    if (pNode -> ToElement() -> Attribute("X")){
+      x = stof(pNode -> ToElement() -> Attribute("X"));
+    }
+    else{
+      x=0;
+    }
+
+    if (pNode -> ToElement() -> Attribute("Y")){
+      y = stof(pNode -> ToElement() -> Attribute("Y"));
+    }
+    else{
+      y=0;
+    }
+
+    if (pNode -> ToElement() -> Attribute("Z")){
+      z = stof(pNode -> ToElement() -> Attribute("Z"));
+    }
+    else{
+      z=0;
+    }
+
+    Instruction in ('t',time,0,x,y,z);
+    (*instructionsMatrix)[*i].push_back(in);
+  }
+
+}
+
 void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i){
   XMLNode* pParm;
   pParm = pNode -> FirstChildElement();
-  int a=0, n;
+  int n;
   std::string file;
   std::vector<std::string> files;
+  printf("9\n" );
+
   while(pParm)
   {
       file = pParm-> ToElement() -> Attribute("file");
       files.push_back(file);
       pParm = pParm->NextSiblingElement();
-      a++;
   }
   for(n=0;n<files.size();n++){
     ifstream infile;
@@ -172,7 +233,7 @@ void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix
       (*p).x = stof(tokens[0],nullptr);
       (*p).y = stof(tokens[1],nullptr);
       (*p).z = stof(tokens[2],nullptr);
-      (*pointsMatrix)[*i].push_back(*p);
+      (*pointsMatrix)[*i].push_back(p);
     }
   }
     infile.close();
@@ -202,6 +263,14 @@ int loadDoc(char* path,  pointsMatrix* pointsMatrix, instructionsMatrix* instruc
     i++;
     group = group -> NextSiblingElement("group");
   }
+
+  int linhas =0, colunas =0;
+
+  for(linhas=0;linhas<(*instructionsMatrix).size();linhas++)
+    for(colunas=0;colunas<(*instructionsMatrix)[linhas].size();colunas++)
+          (*instructionsMatrix)[linhas][colunas].print();
+
+
   return 1;
 }
 return 0;

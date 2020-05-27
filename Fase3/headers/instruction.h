@@ -3,15 +3,30 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <vector>
+
+typedef struct {
+  float x;
+  float y;
+  float z;
+} Ponto;
 
 class Instruction {
+
+private:
     char instruction;
+    float time;
     float angle;
     float x, y, z;
+    std::vector<Ponto*> pontos;
+
+
 public:
-    Instruction (char,float, float, float, float);
+    Instruction (char, float ,float, float, float, float);
 
     char getInstruction ();
+
+    int getTime();
 
     float getAngle ();
 
@@ -23,6 +38,8 @@ public:
 
     void print();
 
+    void addPonto(Ponto*);
+
     void setInstruction (char);
 
     void setAngle (float);
@@ -33,6 +50,16 @@ public:
 
     void setZ (float);
 
+
 };
+
+typedef std::vector<Ponto*> pointsStruct;
+typedef std::vector<pointsStruct> pointsMatrix;
+typedef std::vector<Instruction> instructions;
+typedef std::vector<instructions> instructionsMatrix;
+
+
+
+
 
 #endif

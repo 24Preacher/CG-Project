@@ -1,0 +1,18 @@
+<scene>
+  <group>
+      <translate time="10" >
+        <point X="1" Y="0" Z="1" />
+        <point X="0" Y="0.707" Z="1" />
+        <point X="0" Y="1" Z="1" />
+      </translate>
+        <models>
+          <model file="models/sphere.3d" />
+      </models>
+  </group>
+  <group>
+      <rotation time="10" X="0"  Y="1" Z="0" />
+      <models>
+          <model file="models/sphere.3d" />
+      </models>
+  </group>
+</scene>

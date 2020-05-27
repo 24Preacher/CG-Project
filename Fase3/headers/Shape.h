@@ -1,4 +1,6 @@
-#include <stdio.h>
+#ifndef shape_h
+#define shape_h
+
 #define GL_GLEXT_PROTOTYPES
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -6,12 +8,12 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #endif
-#ifndef SHAPE
-#define SHAPE
 
-
+#include <stdio.h>
+#include <iostream>
 #include <vector>
-#include "parser.h"
+#include <fstream>
+#include "instruction.h"
 
 class Shape {
 
@@ -28,4 +30,4 @@ public:
     void print(const char*);
 };
 
-#endif
+#endif //shape_h

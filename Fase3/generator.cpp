@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <sstream>
-#include "headers/parser.h"
+#include "headers/instruction.h"
 #include "headers/Shape.h"
 
 
@@ -402,9 +402,9 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
 
   float u1, v1, u2, v2, inc = 1.0/tesselation;
   Ponto* res[nBezier][4];
+  Shape* shape = new Shape();
 
   for(int i=0; i<nBezier; i++){
-    Shape* shape = new Shape();
     for(int j=0; j<tesselation; j++){
       for(int w=0; w<tesselation; w++){
           u1 = j*inc;
@@ -454,6 +454,7 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
       }
     }
   }
+
   shape->print(file2);
 
 
