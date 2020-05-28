@@ -55,13 +55,5 @@ public:
 
 };
 
-typedef std::vector<Ponto*> pointsStruct;
-typedef std::vector<pointsStruct> pointsMatrix;
-typedef std::vector<Instruction> instructions;
-typedef std::vector<instructions> instructionsMatrix;
-
-
-
-
 
 #endif

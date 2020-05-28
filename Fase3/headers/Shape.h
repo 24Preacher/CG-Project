@@ -30,4 +30,10 @@ public:
     void print(const char*);
 };
 
+typedef std::vector<Shape*> shapeStruct;
+typedef std::vector<shapeStruct> shapeMatrix;
+typedef std::vector<Instruction> instructions;
+typedef std::vector<instructions> instructionsMatrix;
+
+
 #endif //shape_h

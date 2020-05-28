@@ -15,7 +15,7 @@ float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 0.2;
 float px=10,py=10,pz=10;
 float dx,dy,dz;
 int frame=0,timebase=0;
-pointsMatrix points;
+shapeMatrix points;
 instructionsMatrix inst;
 int mode = GL_LINE;
 

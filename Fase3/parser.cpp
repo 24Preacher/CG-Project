@@ -19,7 +19,7 @@ vector<string> split(const string& s, char delimiter)
 }
 
 
-void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i){
+void parseGroup(XMLNode* group, shapeMatrix* shape, instructionsMatrix* instructionsMatrix, int* i){
   XMLNode* pParm;
   pParm = group -> FirstChildElement();
   float angle, scale, x, y, z,time;
@@ -28,7 +28,7 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
   while(pParm)
   {
         if ((strcmp (pParm -> Value(), "translate")) == 0){
-          parseTranslation(pParm,pointsMatrix,instructionsMatrix,i);
+          parseTranslation(pParm,shape,instructionsMatrix,i);
         }
 
         else if ((strcmp (pParm -> Value(), "rotate")) == 0){
@@ -117,20 +117,20 @@ void parseGroup(XMLNode* group, pointsMatrix* pointsMatrix, instructionsMatrix* 
             }
 
           (*instructionsMatrix).push_back(insts);
-          pointsStruct pontos; // vector de pontos vazio
-          (*pointsMatrix).push_back(pontos);
+          shapeStruct pontos; // vector de pontos vazio
+          (*shape).push_back(pontos);
           (*i)++;
-          parseGroup(pParm, pointsMatrix, instructionsMatrix, i);
+          parseGroup(pParm, shape, instructionsMatrix, i);
         }
         else if ((strcmp (pParm -> Value(), "models")) == 0){
-          parseModels(pParm, pointsMatrix, instructionsMatrix, i);
+          parseModels(pParm, shape, instructionsMatrix, i);
         }
       pParm = pParm->NextSiblingElement();
   }
 }
 
 
-void parseTranslation (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i){
+void parseTranslation (XMLNode* pNode, shapeMatrix* shape, instructionsMatrix* instructionsMatrix, int* i){
   XMLNode* pParm;
   float x,y,z,time;
 
@@ -202,7 +202,7 @@ void parseTranslation (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsM
 
 }
 
-void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix, int* i){
+void parseModels (XMLNode* pNode, shapeMatrix* shape, instructionsMatrix* instructionsMatrix, int* i){
   XMLNode* pParm;
   pParm = pNode -> FirstChildElement();
   int n;
@@ -215,12 +215,14 @@ void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix
       files.push_back(file);
       pParm = pParm->NextSiblingElement();
   }
+
   for(n=0;n<files.size();n++){
     ifstream infile;
     infile.open(files[n]);
     if(infile.is_open()){
       std::string line;
 
+    Shape* shapez = new Shape();
     while(std::getline(infile,line)){
 
       std::vector<string> tokens;
@@ -230,15 +232,16 @@ void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix
       (*p).x = stof(tokens[0],nullptr);
       (*p).y = stof(tokens[1],nullptr);
       (*p).z = stof(tokens[2],nullptr);
-      (*pointsMatrix)[*i].push_back(p);
+      (*shapez).inserePonto(p);
     }
+    (*shape)[*i].push_back(shapez);
   }
     infile.close();
  }
 }
 
 
-int loadDoc(char* path,  pointsMatrix* pointsMatrix, instructionsMatrix* instructionsMatrix ) {
+int loadDoc(char* path,  shapeMatrix* shape, instructionsMatrix* instructionsMatrix ) {
     XMLDocument doc;
     tinyxml2::XMLError flag = doc.LoadFile(path);
 
@@ -253,10 +256,10 @@ int loadDoc(char* path,  pointsMatrix* pointsMatrix, instructionsMatrix* instruc
     if(group == nullptr) return XML_ERROR_PARSING_ELEMENT;
     while(group){
     instructions insts; // vector de instrucoes vazio
-    pointsStruct pontos; // vector de pontos vazio
+    shapeStruct pontos; // vector de pontos vazio
     (*instructionsMatrix).push_back(insts);
-    (*pointsMatrix).push_back(pontos);
-    parseGroup(group,pointsMatrix,instructionsMatrix,&i);
+    (*shape).push_back(pontos);
+    parseGroup(group,shape,instructionsMatrix,&i);
     i++;
     group = group -> NextSiblingElement("group");
   }
