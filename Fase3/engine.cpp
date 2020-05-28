@@ -15,7 +15,7 @@ float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 0.2;
 float px=10,py=10,pz=10;
 float dx,dy,dz;
 int frame=0,timebase=0;
-shapeMatrix points;
+shapeMatrix sM;
 instructionsMatrix inst;
 int mode = GL_LINE;
 
@@ -66,6 +66,14 @@ void runInstruction(int i , int j){
 	}
 	else if(inst[i][j].getInstruction() == 'T'){
 		renderCatmullRomCurve(inst[i][j].getPontos());
+		int duration = inst[i][j].getTime();
+		int time = glutGet(GLUT_ELAPSED_TIME);
+    float k = (time / 1000.0) / duration;
+    float position = k - floor(k);
+		float res[3],dev[3];
+		getGlobalCatmullRomPoint(position, res, dev,inst[i][j].getPontos());
+		glTranslatef(res[0],res[1],res[2]);
+
 	}
 	else if(inst[i][j].getInstruction() == 't'){
 		glTranslatef(inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
@@ -81,8 +89,8 @@ void runInstruction(int i , int j){
 void drawModel(int i){
 	glBegin(GL_TRIANGLES);
 	unsigned int j;
-	for(j=0;j<points[i].size();j++){
-		glVertex3f(points[i][j]->x,points[i][j]->y,points[i][j]->z);
+	for(j=0;j<sM[i].size();j++){
+		sM[i][j]->draw();
 	}
 	glEnd();
 }
@@ -90,7 +98,7 @@ void drawModel(int i){
 void drawPoints (){
   unsigned int i,j;
 
-	for(i=0;i<points.size();i++){
+	for(i=0;i<sM.size();i++){
 		glPushMatrix();
 		for(j=0;j<inst[i].size();j++){
 			runInstruction(i,j);
@@ -237,6 +245,22 @@ printf ( " |                                                                    
 printf ( " └--------------------------------------------------------------------------------------------------┘\n");
 }
 
+void init() {
+
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+int i,j;
+		for(i=0;i<sM.size();i++){
+			for(j=0;j<sM[i].size();j++){
+				sM[i][j]->vbo();
+			}
+		}
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
+}
+
 
 int main(int argc, char **argv) {
   std::string arg = argv[1];
@@ -253,7 +277,7 @@ int main(int argc, char **argv) {
   folder.append(arg);
   char * path = new char[folder.size() + 1];
   std::copy(folder.begin(), folder.end(), path);
- loadDoc (path,&points,&inst);
+ loadDoc (path,&sM,&inst);
 
 
 
@@ -265,6 +289,8 @@ int main(int argc, char **argv) {
  glutInitWindowPosition(100,100);
  glutInitWindowSize(800,800);
  glutCreateWindow("3D ENGINE @ CG 19/20");
+ glewInit();
+
 
  glClearColor(0,0,0,0) ;
  glClear(GL_COLOR_BUFFER_BIT);
@@ -279,10 +305,7 @@ int main(int argc, char **argv) {
  glutKeyboardFunc(processKeys);
  glutSpecialFunc(processSpecialKeys);
 
-
-//  OpenGL settings
- glEnable(GL_DEPTH_TEST);
- glEnable(GL_CULL_FACE);
+ init();
 
 // enter GLUT's main cycle
  glutMainLoop();

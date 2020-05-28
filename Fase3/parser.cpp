@@ -24,9 +24,13 @@ void parseGroup(XMLNode* group, shapeMatrix* shape, instructionsMatrix* instruct
   pParm = group -> FirstChildElement();
   float angle, scale, x, y, z,time;
   int num = *i;
-
+  int u =0;
+printf("1\n" );
   while(pParm)
   {
+    printf("%d\n",u );
+    u++;
+
         if ((strcmp (pParm -> Value(), "translate")) == 0){
           parseTranslation(pParm,shape,instructionsMatrix,i);
         }
