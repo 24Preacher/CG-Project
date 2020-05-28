@@ -208,7 +208,6 @@ void parseModels (XMLNode* pNode, pointsMatrix* pointsMatrix, instructionsMatrix
   int n;
   std::string file;
   std::vector<std::string> files;
-  printf("9\n" );
 
   while(pParm)
   {
@@ -262,11 +261,6 @@ int loadDoc(char* path,  pointsMatrix* pointsMatrix, instructionsMatrix* instruc
     group = group -> NextSiblingElement("group");
   }
 
-  int linhas =0, colunas =0;
-
-  for(linhas=0;linhas<(*instructionsMatrix).size();linhas++)
-    for(colunas=0;colunas<(*instructionsMatrix)[linhas].size();colunas++)
-          (*instructionsMatrix)[linhas][colunas].print();
 
 
   return 1;

@@ -1,10 +1,14 @@
 <scene>
   <group>
       <translate time="10" >
-        <point X="-10" Y="0" Z="-10" />
-        <point X="10" Y="0" Z="-10" />
-        <point X="10" Y="0" Z="10" />
-        <point X= "-10" Y="0" z="10"/>
+        <point X="4" Y="0" Z="-3" />
+        <point X="4" Y="0" Z="3" />
+        <point X="1.5" Y="0" Z="8" />
+        <point X= "-1.5" Y="0" Z="8"/>
+        <point X= "-4" Y="0" Z="3"/>
+        <point X= "-4" Y="0" Z="-3"/>
+        <point X= "-1.5" Y="0" Z="-8"/>
+        <point X= "1.5" Y="0" Z="-8"/>
       </translate>
         <models>
           <model file="models/sphere.3d" />

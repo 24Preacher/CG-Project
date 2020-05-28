@@ -214,7 +214,6 @@ else if(curva == 2){
 	float td[4] = {3 * powf(t,2), 2*t, 1, 0};
 	multMatrixVector(*a, td, deriv);
 
-	// ...
 }
 
 

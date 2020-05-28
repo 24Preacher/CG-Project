@@ -14,6 +14,7 @@
 float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 0.2;
 float px=10,py=10,pz=10;
 float dx,dy,dz;
+int frame=0,timebase=0;
 pointsMatrix points;
 instructionsMatrix inst;
 int mode = GL_LINE;
@@ -109,6 +110,7 @@ void renderScene(void) {
 	dx = viewx;
 	dy = viewy;
 	dz = viewz;
+	char s[64];
 
 	// clear buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -139,7 +141,17 @@ void renderScene(void) {
 	glPolygonMode(GL_FRONT_AND_BACK,mode);
 	drawPoints();
 
-
+	frame++;
+	int time;
+	float fps;
+	time = glutGet(GLUT_ELAPSED_TIME);
+	if (time - timebase > 1000) {
+		fps = frame*1000.0/(time-timebase);
+		timebase = time;
+		frame = 0;
+		sprintf(s, "FPS: %f6.2", fps);
+		glutSetWindowTitle(s);
+}
 	glutSwapBuffers();
 }
 
@@ -236,6 +248,7 @@ int main(int argc, char **argv) {
   }
 
 
+
   std::string folder = "scenes/";
   folder.append(arg);
   char * path = new char[folder.size() + 1];
@@ -258,6 +271,7 @@ int main(int argc, char **argv) {
 
 // Required callback registry
  glutDisplayFunc(renderScene);
+ glutIdleFunc(renderScene);
  glutReshapeFunc(changeSize);
 
 

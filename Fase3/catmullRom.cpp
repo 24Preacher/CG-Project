@@ -45,36 +45,29 @@ void getCatmullRomPoint(float t, std::vector<Ponto*> pontos, float *pos, float *
 										{-0.5f,  0.0f,  0.5f,  0.0f},
 										{ 0.0f,  1.0f,  0.0f,  0.0f}};
 
+		float a[4][4] = {0};
 
-//precisamos de 4 pontos
- Ponto* p0 = pontos[indices[0]];
- Ponto* p1 = pontos[indices[1]];
- Ponto* p2 = pontos[indices[2]];
- Ponto* p3 = pontos[indices[3]];
+		Ponto* p0 = pontos.at(indices[0]);
+		Ponto* p1 = pontos.at(indices[1]);
+		Ponto* p2 = pontos.at(indices[2]);
+		Ponto* p3 = pontos.at(indices[3]);
 
+		float pX [4] = {p0->x,p1->x,p2->x,p3->x};
+		float pY [4] = {p0->y,p1->y,p2->y,p3->y};
+		float pZ [4] = {p0->z,p1->z,p2->z,p3->z};
+
+		multMatrixVector(*m, pX, a[0]);
+		multMatrixVector(*m, pY, a[1]);
+		multMatrixVector(*m, pZ, a[2]);
 
 
 	// Compute A = M * P
-	float a[4] = {0};
-	multMatrixVector(*m, tt, a);
-
+	multMatrixVector(*a, tt, pos);
 	//derivada
-	float d[4] = {0};
-	multMatrixVector(*m, td, d);
+	multMatrixVector(*a, td, deriv);
 
 
 
-	// Compute pos[i] = T * A
-	pos[0] = a[0]*p0->x +a[1]*p1->x + a[2]*p2->x + a[3]*p3->x;
-	pos[1] = a[0]*p0->y +a[1]*p1->y + a[2]*p2->y + a[3]*p3->y;
-	pos[2] = a[0]*p0->z +a[1]*p1->z + a[2]*p2->z + a[3]*p3->z;
-
-
-	// compute deriv[i] = T' * A
-
-	pos[0] = d[0]*p0->x +d[1]*p1->x + d[2]*p2->x + d[3]*p3->x;
-	pos[1] = d[0]*p0->y +d[1]*p1->y + d[2]*p2->y + d[3]*p3->y;
-	pos[2] = d[0]*p0->z +d[1]*p1->z + d[2]*p2->z + d[3]*p3->z;
 
 }
 
