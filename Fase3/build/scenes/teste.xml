@@ -15,9 +15,9 @@
       </models>
   </group>
   <group>
-      <rotation time="10" X="0"  Y="1" Z="0" />
+      <rotate time="10" X="0"  Y="1" Z="0" />
       <models>
-          <model file="models/sphere.3d" />
+          <model file="models/box.3d" />
       </models>
   </group>
 </scene>

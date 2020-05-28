@@ -99,7 +99,7 @@ void renderCatmullRomCurve(std::vector<Ponto*> pontos){
 
 	glBegin(GL_LINE_LOOP);
 // draw curve using line segments with GL_LINE_LOOP
-	float pos[3], deriv[3];
+	float pos[4], deriv[4];
 	float t;
 
 	std::vector<Ponto*> pts;

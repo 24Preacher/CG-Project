@@ -60,19 +60,30 @@ void changeSize(int w, int h) {
 }
 
 void runInstruction(int i , int j){
+	int duration=0,time=0;
+	float k=0.0,position=0.0;
+	float res[4],dev[4];
 
 	if(inst[i][j].getInstruction() == 'r'){
+		if(inst[i][j].getTime()==0){
 		glRotatef(inst[i][j].getAngle(),inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
+	}else{
+	 float a;
+	 float angle = 360 * modff((glutGet(GLUT_ELAPSED_TIME)/((double) ((inst[i][j].getTime())*1000))),&a);
+	 glRotatef(angle,inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
+	}
 	}
 	else if(inst[i][j].getInstruction() == 'T'){
-		renderCatmullRomCurve(inst[i][j].getPontos());
-		int duration = inst[i][j].getTime();
-		int time = glutGet(GLUT_ELAPSED_TIME);
-    float k = (time / 1000.0) / duration;
-    float position = k - floor(k);
-		float res[3],dev[3];
-		getGlobalCatmullRomPoint(position, res, dev,inst[i][j].getPontos());
-		glTranslatef(res[0],res[1],res[2]);
+
+		std::vector<Ponto*> controlPoints =inst[i][j].getPontos();
+		renderCatmullRomCurve(controlPoints);
+		duration = inst[i][j].getTime();
+	 	time = glutGet(GLUT_ELAPSED_TIME);
+    k = (time / 1000.0) / duration;
+    position = k - floor(k);
+		int temp = floor(k);
+		getGlobalCatmullRomPoint(position, res, dev,controlPoints);
+	 	glTranslatef(res[0],res[1],res[2]);
 
 	}
 	else if(inst[i][j].getInstruction() == 't'){
@@ -84,28 +95,32 @@ void runInstruction(int i , int j){
 	else if(inst[i][j].getInstruction() == 'c'){
 		glColor3f(inst[i][j].getX(),inst[i][j].getY(),inst[i][j].getZ());
 	}
+
 }
 
 void drawModel(int i){
-	glBegin(GL_TRIANGLES);
+
 	unsigned int j;
 	for(j=0;j<sM[i].size();j++){
 		sM[i][j]->draw();
 	}
-	glEnd();
+
 }
 
 void drawPoints (){
-  unsigned int i,j;
+  unsigned int i=0,j;
 
 	for(i=0;i<sM.size();i++){
 		glPushMatrix();
 		for(j=0;j<inst[i].size();j++){
 			runInstruction(i,j);
+
 			}
+
 			drawModel(i);
 		glPopMatrix();
 	}
+
 }
 
 void renderScene(void) {
@@ -145,6 +160,7 @@ void renderScene(void) {
 	glVertex3f(0.0f,0.0f,-100.0f);
 	glVertex3f(0.0f,0.0f,100.0f);
 	glEnd();
+	glColor3f(1.0f,1.0f,1.0f);
 
 	glPolygonMode(GL_FRONT_AND_BACK,mode);
 	drawPoints();
