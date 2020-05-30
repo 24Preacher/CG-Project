@@ -1,6 +1,8 @@
 #include "headers/parser.h"
 #include "headers/tinyxml2.h"
 
+
+
 using namespace std;
 using namespace tinyxml2;
 
@@ -18,6 +20,382 @@ vector<string> split(const string& s, char delimiter)
     return tokens;
 }
 
+void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* instructionsMatrix, int* i){
+
+  XMLNode* pParm;
+  pParm = pNode -> FirstChildElement();
+  float posicao[4],dir[3],adds[2],ambient[3],diffuse[3],specular[3];
+  int type;
+
+  //type -> 1 para Point, 2 para Directional, 3 para spot
+  while(pParm)
+  {
+  if ((strcmp (pParm -> Value(), "light")) == 0) {
+
+    if(pParm -> ToElement() -> Attribute("type")) {
+      //POINT
+      type = 1;
+
+      if (pParm -> ToElement() -> Attribute("posX")){
+        posicao[0] = stof(pParm -> ToElement() -> Attribute("posX"));
+      }
+      else{
+        posicao[0] = -1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("posY")){
+        posicao[1] = stof(pParm -> ToElement() -> Attribute("posY"));
+      }
+      else{
+        posicao[1]=-1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("posZ")){
+        posicao[2] = stof(pParm -> ToElement() -> Attribute("posZ"));
+      }
+      else{
+        posicao[2] = -1;
+      }
+        posicao[3] = 1.0; //por ser um ponto de luz
+
+      //ambient
+      if (pParm -> ToElement() -> Attribute("ambX")){
+        ambient[0] = stof(pParm -> ToElement() -> Attribute("ambX"));
+      }
+      else{
+        ambient[0] = -1;
+      }
+
+
+      if (pParm -> ToElement() -> Attribute("ambY")){
+        ambient[1] = stof(pParm -> ToElement() -> Attribute("ambY"));
+      }
+      else{
+        ambient[1]=-1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("ambZ")){
+        ambient[2] = stof(pParm -> ToElement() -> Attribute("ambZ"));
+      }
+      else{
+        ambient[2] = -1;
+      }
+
+      //diffuse
+      if (pParm -> ToElement() -> Attribute("diffX")){
+        diffuse[0] = stof(pParm -> ToElement() -> Attribute("diffX"));
+      }
+      else{
+        diffuse[0] = -1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("diffY")){
+        diffuse[1] = stof(pParm -> ToElement() -> Attribute("diffY"));
+      }
+      else{
+        diffuse[1]=-1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("diffZ")){
+        diffuse[2] = stof(pParm -> ToElement() -> Attribute("diffZ"));
+      }
+      else{
+        diffuse[2] = -1;
+      }
+      //specular
+      if (pParm -> ToElement() -> Attribute("specX")){
+        specular[0] = stof(pParm -> ToElement() -> Attribute("specX"));
+      }
+      else{
+        specular[0] = -1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("specY")){
+        specular[1] = stof(pParm -> ToElement() -> Attribute("specY"));
+      }
+      else{
+        specular[1]=-1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("specZ")){
+        specular[2] = stof(pParm -> ToElement() -> Attribute("specZ"));
+      }
+      else{
+        specular[2] = -1;
+      }
+      //cutoff
+      if (pParm -> ToElement() -> Attribute("cutoff")){
+        adds[0] = stof(pParm -> ToElement() -> Attribute("cutoff"));
+      }
+      else{
+        adds[0] = 180;
+      }
+      //exponent [0,128]
+      if (pParm -> ToElement() -> Attribute("exponent")){
+        adds[1] = stof(pParm -> ToElement() -> Attribute("exponent"));
+      }
+      else{
+        adds[1]=0;
+      }
+      //quadratic attenuation {0,1}
+      if (pParm -> ToElement() -> Attribute("att")){
+        adds[2] = stof(pParm -> ToElement() -> Attribute("att"));
+      }
+      else{
+        adds[2] = 0;
+      }
+
+      Light* in = new Light (type, posicao, dir, adds, ambient, diffuse, specular);
+      (*lights).push_back(in);
+
+      printf("type = %d\n", type );
+      for(int y = 0; y < 4;y++)
+        printf("posicao [%d] %f\n", y, posicao[y] );
+    }
+    else if((strcmp (pParm -> Value(), "DIRECTIONAL")) == 0){
+      //DIRECTIONAL
+      type = 2;
+      if (pParm -> ToElement() -> Attribute("posX")){
+        posicao[0] = stof(pParm -> ToElement() -> Attribute("posX"));
+      }
+      else{
+        posicao[0] = -1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("posY")){
+        posicao[1] = stof(pParm -> ToElement() -> Attribute("posY"));
+      }
+      else{
+        posicao[1]=-1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("posZ")){
+        posicao[2] = stof(pParm -> ToElement() -> Attribute("posZ"));
+      }
+      else{
+        posicao[2] = -1;
+      }
+        posicao[3] = 0.0; //por ser um vetor diretor
+
+      //ambient
+      if (pParm -> ToElement() -> Attribute("ambX")){
+        ambient[0] = stof(pParm -> ToElement() -> Attribute("ambX"));
+      }
+      else{
+        ambient[0] = -1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("ambY")){
+        ambient[1] = stof(pParm -> ToElement() -> Attribute("ambY"));
+      }
+      else{
+        ambient[1]=-1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("ambZ")){
+        ambient[2] = stof(pParm -> ToElement() -> Attribute("ambZ"));
+      }
+      else{
+        ambient[2] = -1;
+      }
+
+      //diffuse
+      if (pParm -> ToElement() -> Attribute("diffX")){
+        diffuse[0] = stof(pParm -> ToElement() -> Attribute("diffX"));
+      }
+      else{
+        diffuse[0] = -1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("diffY")){
+        diffuse[1] = stof(pParm -> ToElement() -> Attribute("diffY"));
+      }
+      else{
+        diffuse[1]=-1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("diffZ")){
+        diffuse[2] = stof(pParm -> ToElement() -> Attribute("diffZ"));
+      }
+      else{
+        diffuse[2] = -1;
+      }
+      //specular
+      if (pParm -> ToElement() -> Attribute("specX")){
+        specular[0] = stof(pParm -> ToElement() -> Attribute("specX"));
+      }
+      else{
+        specular[0] = -1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("specY")){
+        specular[1] = stof(pParm -> ToElement() -> Attribute("specY"));
+      }
+      else{
+        specular[1]=-1;
+      }
+
+      if (pParm -> ToElement() -> Attribute("specZ")){
+        specular[2] = stof(pParm -> ToElement() -> Attribute("specZ"));
+      }
+      else{
+        specular[2] = -1;
+      }
+      //cutoff
+      if (pParm -> ToElement() -> Attribute("cutoff")){
+        adds[0] = stof(pParm -> ToElement() -> Attribute("cutoff"));
+      }
+      else{
+        adds[0] = 180;
+      }
+      //exponent [0,128]
+      if (pParm -> ToElement() -> Attribute("exponent")){
+        adds[1] = stof(pParm -> ToElement() -> Attribute("exponent"));
+      }
+      else{
+        adds[1]=0;
+      }
+      //quadratic attenuation {0,1}
+      if (pParm -> ToElement() -> Attribute("att")){
+        adds[2] = stof(pParm -> ToElement() -> Attribute("att"));
+      }
+      else{
+        adds[2] = 0;
+      }
+
+      Light* in = new Light (type, posicao, dir, adds, ambient, diffuse, specular);
+      (*lights).push_back(in);
+
+      printf("type = %d\n", type );
+      for(int y = 0; y < 4;y++)
+        printf("posicao [%d] %f\n", y, posicao[y] );
+    }
+    else if((strcmp (pParm -> Value(), "SPOT")) == 0){
+      //SPOT
+      type = 3;
+        if (pParm -> ToElement() -> Attribute("dirX")){
+          dir[0] = stof(pParm -> ToElement() -> Attribute("dirX"));
+        }
+        else{
+          dir[0] = -1;
+        }
+
+        if (pParm -> ToElement() -> Attribute("dirY")){
+          dir[1] = stof(pParm -> ToElement() -> Attribute("dirY"));
+        }
+        else{
+          dir[1]=-1;
+        }
+
+        if (pParm -> ToElement() -> Attribute("dirZ")){
+          dir[2] = stof(pParm -> ToElement() -> Attribute("dirZ"));
+        }
+        else{
+          dir[2] = -1;
+        }
+          dir[3] = 0.0; //por ser um vetor diretor
+
+        //ambient
+        if (pParm -> ToElement() -> Attribute("ambX")){
+          ambient[0] = stof(pParm -> ToElement() -> Attribute("ambX"));
+        }
+        else{
+          ambient[0] = -1;
+        }
+
+        if (pParm -> ToElement() -> Attribute("ambY")){
+          ambient[1] = stof(pParm -> ToElement() -> Attribute("ambY"));
+        }
+        else{
+          ambient[1]=-1;
+        }
+
+        if (pParm -> ToElement() -> Attribute("ambZ")){
+          ambient[2] = stof(pParm -> ToElement() -> Attribute("ambZ"));
+        }
+        else{
+          ambient[2] = -1;
+        }
+
+        //diffuse
+        if (pParm -> ToElement() -> Attribute("diffX")){
+          diffuse[0] = stof(pParm -> ToElement() -> Attribute("diffX"));
+        }
+        else{
+          diffuse[0] = -1;
+        }
+
+        if (pParm -> ToElement() -> Attribute("diffY")){
+          diffuse[1] = stof(pParm -> ToElement() -> Attribute("diffY"));
+        }
+        else{
+          diffuse[1]=-1;
+        }
+
+        if (pParm -> ToElement() -> Attribute("diffZ")){
+          diffuse[2] = stof(pParm -> ToElement() -> Attribute("diffZ"));
+        }
+        else{
+          diffuse[2] = -1;
+        }
+        //specular
+        if (pParm -> ToElement() -> Attribute("specX")){
+          specular[0] = stof(pParm -> ToElement() -> Attribute("specX"));
+        }
+        else{
+          specular[0] = -1;
+        }
+
+        if (pParm -> ToElement() -> Attribute("specY")){
+          specular[1] = stof(pParm -> ToElement() -> Attribute("specY"));
+        }
+        else{
+          specular[1]=-1;
+        }
+
+        if (pParm -> ToElement() -> Attribute("specZ")){
+          specular[2] = stof(pParm -> ToElement() -> Attribute("specZ"));
+        }
+        else{
+          specular[2] = -1;
+        }
+        //cutoff
+        if (pParm -> ToElement() -> Attribute("cutoff")){
+          adds[0] = stof(pParm -> ToElement() -> Attribute("cutoff"));
+        }
+        else{
+          adds[0] = 180;
+        }
+        //exponent [0,128]
+        if (pParm -> ToElement() -> Attribute("exponent")){
+          adds[1] = stof(pParm -> ToElement() -> Attribute("exponent"));
+        }
+        else{
+          adds[1]=0;
+        }
+        //quadratic attenuation {0,1}
+        if (pParm -> ToElement() -> Attribute("att")){
+          adds[2] = stof(pParm -> ToElement() -> Attribute("att"));
+        }
+        else{
+          adds[2] = 0;
+        }
+
+        Light* in = new Light (type, posicao, dir, adds, ambient, diffuse, specular);
+        (*lights).push_back(in);
+
+        printf("type = %d\n", type );
+        for(int y = 0; y < 4;y++)
+          printf("posicao [%d] %f\n", y, posicao[y] );
+
+      }
+    }
+
+    pParm = pParm->NextSiblingElement();
+  }
+
+
+}
 
 void parseGroup(XMLNode* group, shapeMatrix* shape, instructionsMatrix* instructionsMatrix, int* i){
   XMLNode* pParm;
@@ -352,17 +730,23 @@ void parseModels (XMLNode* pNode, shapeMatrix* shape, instructionsMatrix* instru
 
 
 
-int loadDoc(char* path,  shapeMatrix* shape, instructionsMatrix* instructionsMatrix ) {
+int loadDoc(char* path,  shapeMatrix* shape, instructionsMatrix* instructionsMatrix, vector<Light*> *lights) {
     XMLDocument doc;
     tinyxml2::XMLError flag = doc.LoadFile(path);
+    int i;
 
     if(!flag){
       XMLNode *scene = doc.FirstChild();
       if(scene == nullptr){
       return XML_ERROR_FILE_READ_ERROR;
     }
+    if(XMLNode *group = scene -> FirstChildElement("lights")){
+      i = 0;
+      parseLight(group , lights , instructionsMatrix , &i);
+      i++;
+    }
 
-    XMLNode *group = scene -> FirstChildElement("group");
+  if(XMLNode *group = scene -> FirstChildElement("group")){
     int i = 0;
     if(group == nullptr) return XML_ERROR_PARSING_ELEMENT;
     while(group){
@@ -374,6 +758,7 @@ int loadDoc(char* path,  shapeMatrix* shape, instructionsMatrix* instructionsMat
     i++;
     group = group -> NextSiblingElement("group");
   }
+}
 
 
 

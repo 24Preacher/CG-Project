@@ -18,6 +18,7 @@ float px=10,py=10,pz=10;
 float dx,dy,dz;
 int frame=0,timebase=0;
 shapeMatrix sM;
+vector<Light*> lights;
 instructionsMatrix inst;
 int mode = GL_FILL;
 
@@ -342,7 +343,7 @@ int main(int argc, char **argv) {
 // put here the registration of the keyboard callbacks
  glutKeyboardFunc(processKeys);
  glutSpecialFunc(processSpecialKeys);
- loadDoc (path,&sM,&inst);
+ loadDoc(path,&sM,&inst,&lights);
 
 
 // enter GLUT's main cycle

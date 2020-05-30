@@ -5,6 +5,8 @@
 #include "instruction.h"
 #include "Shape.h"
 #include "utils.h"
+#include "light.h"
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -22,7 +24,8 @@ void parseGroup(XMLNode* , shapeMatrix* , instructionsMatrix* , int* );
 void parseModels (XMLNode* , shapeMatrix* , instructionsMatrix* , int* );
 void parseTranslation (XMLNode* , shapeMatrix* , instructionsMatrix* , int* );
 vector<string> split(const string& , char );
-int loadDoc(char* ,  shapeMatrix* , instructionsMatrix*  );
+int loadDoc(char* ,  shapeMatrix* , instructionsMatrix* , vector<Light*> * );
+void parseLight(XMLNode* , vector<Light*>* , instructionsMatrix* , int* );
 
 
 
