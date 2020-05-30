@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include "utils.h"
 
 typedef struct {
   float x;

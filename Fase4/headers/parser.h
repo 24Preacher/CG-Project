@@ -4,6 +4,7 @@
 #include "tinyxml2.h"
 #include "instruction.h"
 #include "Shape.h"
+#include "utils.h"
 #include <iostream>
 #include <string>
 #include <fstream>

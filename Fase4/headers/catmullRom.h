@@ -8,14 +8,14 @@
 #endif
 
 #include "instruction.h"
+#include "utils.h"
 #include <vector>
 #include <math.h>
 
 
 
 
-void cross(float*, float*, float*);
-void normalize(float*);
+
 void getCatmullRomPoint(float, std::vector<Ponto*> , float*, float*, int*);
 void getGlobalCatmullRomPoint(float, float*, float*, std::vector<Ponto*>);
 void renderCatmullRomCurve(std::vector<Ponto*>);

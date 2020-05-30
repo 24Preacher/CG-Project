@@ -2,6 +2,7 @@
     <group>
         <group>
             <!SUN />
+            <colour Red="255" Green="255" Blue="0" />
             <scale X="3" Y="3" Z="3" />
             <models>
                 <model file="models/sphere.3d" />
@@ -9,6 +10,7 @@
         </group>
         <group>
             <! Mercurio />
+            <colour Red="164" Green="155" Blue="168" />
             <rotate angle="15" X="1" Y="1" Z="1" />
             <translate time="30.0" >
                 <point X="4" Y="0" Z="-3" />
@@ -30,6 +32,7 @@
         </group>
         <group>
             <! Venus />
+            <colour Red="214" Green="169" Blue="109" />
             <rotate angle="15" X="1" Y="1" Z="1" />
             <translate time="6.0" >
                 <point X="6" Y="0" Z="-4.5" />
@@ -51,6 +54,7 @@
         </group>
         <group>
             <! Terra />
+            <colour Red="77" Green="136" Blue="255" />
             <rotate angle="15" X="1" Y="1" Z="1" />
             <translate time="20.0" >
                 <point X="9" Y="0" Z="-6.75" />
@@ -72,6 +76,7 @@
             </group>
             <group>
                 <! Lua />
+                <colour Red="192" Green="192" Blue="192" />
                 <rotate angle="45" X="1" Y="1" Z="1" />
                 <translate time="9.0" >
                     <point X="2" Y="0" Z="-1.5" />
@@ -94,6 +99,7 @@
         </group>
         <group>
             <! Marte />
+            <colour Red="230" Green="46" Blue="46" />
             <rotate angle="15" X="1" Y="1" Z="1" />
             <translate time="11.0" >
                 <point X="13.5" Y="0" Z="-10.125" />
@@ -115,6 +121,7 @@
         </group>
         <group>
             <! Jupiter />
+            <colour Red="255" Green="153" Blue="102" />
             <rotate angle="15" X="1" Y="1" Z="1" />
             <translate time="13.0" >
                 <point X="20.5" Y="0" Z="-15.1875" />
@@ -136,6 +143,7 @@
         </group>
         <group>
             <! Saturno />
+            <colour Red="148" Green="74" Blue="0" />
             <rotate angle="15" X="1" Y="1" Z="1" />
             <translate time="15.0" >
                 <point X="24.6" Y="0" Z="-18.225" />
@@ -164,6 +172,7 @@
         </group>
         <group>
             <! Neptuno />
+            <colour Red="77" Green="106" Blue="255" />
             <rotate angle="15" X="1" Y="1" Z="1" />
             <translate time="18.0" >
                 <point X="27.06" Y="0" Z="-20.0475" />
@@ -185,6 +194,7 @@
         </group>
         <group>
             <! Urano />
+            <colour Red="179" Green="242" Blue="255" />
             <rotate angle="15" X="1" Y="1" Z="1" />
             <translate time="21.0" >
                 <point X="29.766" Y="0" Z="-22.05225" />

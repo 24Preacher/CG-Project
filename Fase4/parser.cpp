@@ -26,7 +26,7 @@ void parseGroup(XMLNode* group, shapeMatrix* shape, instructionsMatrix* instruct
   int num = *i;
   while(pParm)
   {
-    
+
         if ((strcmp (pParm -> Value(), "translate")) == 0){
           parseTranslation(pParm,shape,instructionsMatrix,i);
         }
@@ -207,38 +207,149 @@ void parseModels (XMLNode* pNode, shapeMatrix* shape, instructionsMatrix* instru
   pParm = pNode -> FirstChildElement();
   int n;
   std::string file;
-  std::vector<std::string> files;
+  std::string texturefile;
+  float colorR = 0.0,colorG = 0.0,colorB = 0.0;
+  float cores[4];
+  float shininess;
+  Shape* figura;
 
   while(pParm)
   {
+      std::vector<Ponto*> pontos;
+      std::vector<Ponto*> normals;
+      std::vector<Ponto*> textcoords;
+      if (pParm-> ToElement() -> Attribute("file")){
       file = pParm-> ToElement() -> Attribute("file");
-      files.push_back(file);
-      pParm = pParm->NextSiblingElement();
-  }
 
-  for(n=0;n<files.size();n++){
-    ifstream infile;
-    infile.open(files[n]);
-    if(infile.is_open()){
-      std::string line;
+      ifstream infile;
+      infile.open(file);
+      if(infile.is_open()){
+        std::string line;
+        int a=0;
+      while(std::getline(infile,line)){
 
-    Shape* shapez = new Shape();
-    while(std::getline(infile,line)){
+        std::vector<string> tokens;
+        tokens = split(line, ' ');
 
-      std::vector<string> tokens;
-      tokens = split(line, ' ');
+        // printf("%d %f %f %f %f %f %f %f %f\n", a,
+        // stof(tokens[0]),
+        // stof(tokens[1]),
+        // stof(tokens[2]),
+        // stof(tokens[3]),
+        // stof(tokens[4]),
+        // stof(tokens[5]),
+        // stof(tokens[6]),
+        // stof(tokens[7]) );
+        Ponto *p = new Ponto();
+        (*p).x = stof(tokens[0],nullptr);
+        (*p).y = stof(tokens[1],nullptr);
+        (*p).z = stof(tokens[2],nullptr);
+        pontos.push_back(p);
+        Ponto *p1 = new Ponto();
+        (*p1).x = stof(tokens[3],nullptr);
+        (*p1).y = stof(tokens[4],nullptr);
+        (*p1).z = stof(tokens[5],nullptr);
+        normals.push_back(p1);
+        Ponto *p2 = new Ponto();
+        (*p2).x = stof(tokens[6],nullptr);
+        (*p2).y = stof(tokens[7],nullptr);
+        (*p2).z = 0.0;
+        textcoords.push_back(p2);
+        a++;
+      }
+      infile.close();
+        const char* textura = pParm-> ToElement() -> Attribute("texture");
+        cout << textura << endl;
+        cout.flush();
 
-      Ponto *p = new Ponto();
-      (*p).x = stof(tokens[0],nullptr);
-      (*p).y = stof(tokens[1],nullptr);
-      (*p).z = stof(tokens[2],nullptr);
-      (*shapez).inserePonto(p);
+       figura = new Shape(&pontos,&normals,&textcoords,textura);
+       printf("numero de vertices da figura: %d\n",figura->getNVertices());
+       cout << figura->getNVertices() << endl;
+       cout.flush();
+       figura -> print();
+      if (pParm-> ToElement() -> Attribute("diffR")){
+
+      if (pParm-> ToElement() -> Attribute("diffR")){
+        colorR = stof(pNode -> ToElement() -> Attribute("diffR"));
+      }
+      if (pParm-> ToElement() -> Attribute("diffG")){
+        colorG = stof(pNode -> ToElement() -> Attribute("diffG"));
+      }
+      if (pParm-> ToElement() -> Attribute("diffB")){
+        colorB = stof(pNode -> ToElement() -> Attribute("diffB"));
+      }
+      cores[0]=colorR;
+      cores[1]=colorG;
+      cores[2]=colorB;
+      Material* material = new Material(2,0,cores);
+      figura->addMaterial(material);
+
     }
-    (*shape)[*i].push_back(shapez);
+
+    if (pParm-> ToElement() -> Attribute("emiR")){
+      if (pParm-> ToElement() -> Attribute("emiR")){
+        colorR = stof(pNode -> ToElement() -> Attribute("emiR"));
+      }
+      if (pParm-> ToElement() -> Attribute("emiG")){
+        colorG = stof(pNode -> ToElement() -> Attribute("emiG"));
+      }
+      if (pParm-> ToElement() -> Attribute("emiB")){
+        colorB = stof(pNode -> ToElement() -> Attribute("emiB"));
+      }
+      cores[0]=colorR;
+      cores[1]=colorG;
+      cores[2]=colorB;
+      Material* material = new Material(1,0,cores);
+      figura->addMaterial(material);
+
+    }
+
+    if (pParm-> ToElement() -> Attribute("specR")){
+      if (pParm-> ToElement() -> Attribute("specR")){
+        colorR = stof(pNode -> ToElement() -> Attribute("specR"));
+      }
+      if (pParm-> ToElement() -> Attribute("specG")){
+        colorG = stof(pNode -> ToElement() -> Attribute("specG"));
+      }
+      if (pParm-> ToElement() -> Attribute("specB")){
+        colorB = stof(pNode -> ToElement() -> Attribute("specB"));
+      }
+      if (pParm-> ToElement() -> Attribute("shininess")){
+        shininess = stof(pNode -> ToElement() -> Attribute("shininess"));
+      }
+      cores[0]=colorR;
+      cores[1]=colorG;
+      cores[2]=colorB;
+      Material* material = new Material(0,shininess,cores);
+      figura->addMaterial(material);
+
+    }
+
+    if (pParm-> ToElement() -> Attribute("ambR")){
+      if (pParm-> ToElement() -> Attribute("ambR")){
+        colorR = stof(pNode -> ToElement() -> Attribute("ambR"));
+      }
+      if (pParm-> ToElement() -> Attribute("ambG")){
+        colorG = stof(pNode -> ToElement() -> Attribute("ambG"));
+      }
+      if (pParm-> ToElement() -> Attribute("ambB")){
+        colorB = stof(pNode -> ToElement() -> Attribute("ambB"));
+      }
+      cores[0]=colorR;
+      cores[1]=colorG;
+      cores[2]=colorB;
+      Material* material = new Material(3,0,cores);
+      figura->addMaterial(material);
+
+    }
+      figura->print();
+    (*shape)[*i].push_back(figura);
+    }
   }
-    infile.close();
- }
+      pParm = pParm->NextSiblingElement();
 }
+}
+
 
 
 int loadDoc(char* path,  shapeMatrix* shape, instructionsMatrix* instructionsMatrix ) {

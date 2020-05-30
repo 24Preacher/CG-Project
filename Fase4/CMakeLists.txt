@@ -5,9 +5,7 @@ PROJECT(engine)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set(HEADERS /home/groot14/Desktop/CG2020/CG-Project/Fase3/headers)
-include_directories(${HEADERS})
-set(ENGINE_FILES tinyxml2.cpp headers/tinyxml2.h headers/Shape.h Shape.cpp headers/catmullRom.h catmullRom.cpp instruction.cpp headers/instruction.h parser.cpp headers/parser.h engine.cpp)
+set(ENGINE_FILES headers/material.h material.cpp headers/utils.h utils.cpp tinyxml2.cpp headers/tinyxml2.h headers/Shape.h Shape.cpp headers/catmullRom.h catmullRom.cpp instruction.cpp headers/instruction.h parser.cpp headers/parser.h engine.cpp)
 add_executable(${PROJECT_NAME} ${ENGINE_FILES})
 
 
@@ -63,7 +61,7 @@ endif(WIN32)
 
 # Project Name
 PROJECT(generator)
-set(GENERATOR_FILES Shape.cpp headers/Shape.h generator.cpp )
+set(GENERATOR_FILES headers/material.h material.cpp headers/utils.h utils.cpp Shape.cpp headers/Shape.h generator.cpp )
 add_executable(generator ${GENERATOR_FILES})
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})

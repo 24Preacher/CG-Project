@@ -9,6 +9,8 @@
 #include <math.h>
 #include "headers/parser.h"
 #include "headers/catmullRom.h"
+#include "headers/utils.h"
+
 
 
 float alfaview = -M_PI / 4 , betaview = -M_PI / 4, step = 0.2;
@@ -17,7 +19,7 @@ float dx,dy,dz;
 int frame=0,timebase=0;
 shapeMatrix sM;
 instructionsMatrix inst;
-int mode = GL_LINE;
+int mode = GL_FILL;
 
 
 
@@ -122,6 +124,20 @@ void drawPoints (){
 	}
 
 }
+void renderLights(){
+
+	// GLfloat ambient[4] = {0.2, 0.2, 0.2, 1.0};
+  // GLfloat diffuse[4] = {0.8, 0.2, 0.2, 1.0};
+  // GLfloat specular[4] = {1.0, 1.0, 1.0, 1.0};
+  // GLfloat emission[4] = {0.1, 0.1, 0.1, 1.0};
+
+	// GLfloat pos [4] = {0.0,0.0,0.0,1.0};
+	// glLightfv(GL_LIGHT0, GL_POSITION, pos );
+ 	// glLightfv(GL_LIGHT0, GL_AMBIENT, ambient );
+  // glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse );
+  // glLightfv(GL_LIGHT0, GL_SPECULAR, specular );
+
+}
 
 void renderScene(void) {
 	float viewx, viewy, viewz;
@@ -141,6 +157,8 @@ void renderScene(void) {
 	// set the camera
 	glLoadIdentity();
 
+	ilEnable(IL_ORIGIN_SET);
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
 
 	gluLookAt(px, py, pz,
 		      px + dx, py + dy, pz + dz,
@@ -161,8 +179,9 @@ void renderScene(void) {
 	glVertex3f(0.0f,0.0f,100.0f);
 	glEnd();
 	glColor3f(1.0f,1.0f,1.0f);
+	renderLights();
 
-	glPolygonMode(GL_FRONT_AND_BACK,mode);
+	glPolygonMode(GL_FRONT,mode);
 	drawPoints();
 
 	frame++;
@@ -264,16 +283,21 @@ printf ( " └------------------------------------------------------------------
 void init() {
 
 
-    glEnableClientState(GL_VERTEX_ARRAY);
-int i,j;
-		for(i=0;i<sM.size();i++){
-			for(j=0;j<sM[i].size();j++){
-				sM[i][j]->vbo();
-			}
-		}
+		ilInit();
+		#ifndef __APPLE__
+	  glewInit();
+	  #endif
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+  	glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glEnable(GL_TEXTURE_2D);
+
+		// glEnable(GL_LIGHTING);
+		// glEnable(GL_LIGHT0);
+
 
 }
 
@@ -293,8 +317,6 @@ int main(int argc, char **argv) {
   folder.append(arg);
   char * path = new char[folder.size() + 1];
   std::copy(folder.begin(), folder.end(), path);
- loadDoc (path,&sM,&inst);
-
 
 
 
@@ -305,10 +327,10 @@ int main(int argc, char **argv) {
  glutInitWindowPosition(100,100);
  glutInitWindowSize(800,800);
  glutCreateWindow("3D ENGINE @ CG 19/20");
- glewInit();
 
+ init();
 
- glClearColor(0,0,0,0) ;
+ glClearColor(0,0,0,1) ;
  glClear(GL_COLOR_BUFFER_BIT);
 
 // Required callback registry
@@ -320,8 +342,8 @@ int main(int argc, char **argv) {
 // put here the registration of the keyboard callbacks
  glutKeyboardFunc(processKeys);
  glutSpecialFunc(processSpecialKeys);
+ loadDoc (path,&sM,&inst);
 
- init();
 
 // enter GLUT's main cycle
  glutMainLoop();

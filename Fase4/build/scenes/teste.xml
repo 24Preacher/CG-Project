@@ -11,13 +11,7 @@
         <point X= "1.5" Y="0" Z="-8"/>
       </translate>
         <models>
-          <model file="models/sphere.3d" />
-      </models>
-  </group>
-  <group>
-      <rotate time="10" X="0"  Y="1" Z="0" />
-      <models>
-          <model file="models/box.3d" />
+          <model file="models/esfera.3d" />
       </models>
   </group>
 </scene>

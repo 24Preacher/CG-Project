@@ -17,6 +17,7 @@
 #include <sstream>
 #include "headers/instruction.h"
 #include "headers/Shape.h"
+#include "headers/utils.h"
 
 
 using namespace std;
@@ -114,47 +115,142 @@ void make_Box (float comprimento, float largura, float altura, int divisoes, con
 
 }
 
+void sphere_text(float alpha, float beta, float* resx, float* resy) {
+    float dx = (1.0 / (2.0*M_PI)) * (-alpha) + 1.0;
+    float dy = (1.0 / (M_PI)) * (beta + (M_PI / 2.0));
+
+    if (dx<0)
+      dx=0.0;
+    if (dx>1)
+      dx=1.0;
+    if (dy<0)
+      dy=0.0;
+    if (dy>1)
+      dy=1.0;
+
+    *resx = dx;
+    *resy = dy;
+}
+
 
 void make_Sphere (float radius, int slices, int stacks, const char* file){
 
-    float h_stack = (M_PI/stacks); //altura de cada stack
-    float a_slices = 2*M_PI / slices;
-    int i, j;
-    float alfa, beta = 0;
+  float d_beta  = (M_PI / stacks);
+  float d_alfa = (2*M_PI / slices);
+  int i, j;
+  float alfa, beta;
 
     ofstream f (file,ios::out| ios::trunc );
     if(f.is_open()){
+      float normals [3];
+      float textX = 0,textY = 0;
+
+    for(j=0; j<stacks; j++){
+
+        for(i=0; i<slices; i++){
+
+          alfa = i*(2*M_PI / slices);
+          beta = j*(M_PI / stacks) - (M_PI / 2);
+
+          normals[0]= (radius * cos(alfa) * cos(beta));
+          normals[1]= (radius * sin(beta));
+          normals[2]= (radius * sin(alfa) * cos(beta));
+
+          f << (radius * cos(alfa) * cos(beta)) << ' ' <<
+                     (radius * sin(beta)) << ' ' <<
+                     (radius * sin(alfa) * cos(beta)) << ' ';
+          normalize(normals);
+          f << normals[0] << ' ' << normals[1] << ' ' << normals[2] <<  ' ';
+
+          sphere_text(alfa,beta,&textX,&textY);
+
+          f << textX << ' ' << textY << '\n';
+
+          normals[0]= (radius * cos(alfa) * cos(beta + d_beta));
+          normals[1]= (radius * sin(beta + d_beta));
+          normals[2]= (radius * sin(alfa) * cos(beta + d_beta));
+
+          f << (radius * cos(alfa) * cos(beta + d_beta)) << ' ' <<
+                   (radius * sin(beta + d_beta)) << ' ' <<
+                   (radius * sin(alfa) * cos(beta + d_beta)) <<  ' ';
+
+          normalize(normals);
+
+          f << normals[0] << ' ' << normals[1] << ' ' << normals[2] <<  ' ';
+
+          sphere_text(alfa,beta + d_beta,&textX,&textY);
+
+          f << textX << ' ' << textY << '\n';
+
+          normals[0]= (radius * cos(alfa + d_alfa) * cos(beta));
+          normals[1]= (radius * sin(beta));
+          normals[2]= (radius * sin(alfa + d_alfa) * cos(beta));
 
 
-    for(j=1; j<=stacks; j++){
+          f << (radius * cos(alfa + d_alfa) * cos(beta)) << ' ' <<
+               (radius * sin(beta)) << ' ' <<
+               (radius * sin(alfa + d_alfa) * cos(beta)) << ' ';
 
-        alfa = 0;
-        for(i=1; i<=slices; i++){
-          f << (radius * sin(beta) * sin(alfa)) << ' ' <<
-                     (radius * cos(beta)) << ' ' <<
-                     (radius * sin(beta) * cos(alfa)) << '\n'
-            << (radius * sin(beta + h_stack) * sin(alfa)) << ' ' <<
-                     (radius * cos(beta + h_stack)) << ' ' <<
-                     (radius * sin(beta + h_stack) * cos(alfa)) << '\n'
-            << (radius * sin(beta + h_stack) * sin(alfa + a_slices)) << ' ' <<
-                     (radius * cos(beta + h_stack)) << ' ' <<
-                     (radius * sin(beta + h_stack) * cos(alfa + a_slices)) << '\n'
-             << (radius * sin(beta) * sin(alfa)) << ' ' <<
-                 (radius * cos(beta)) << ' ' <<
-                (radius * sin(beta) * cos(alfa)) << '\n'
-            << (radius * sin(beta + h_stack) * sin(alfa + a_slices)) << ' ' <<
-                (radius * cos(beta + h_stack)) << ' ' <<
-                (radius * sin(beta + h_stack) * cos(alfa + a_slices)) << '\n'
-             << (radius * sin(beta) * sin(alfa + a_slices)) << ' ' <<
-                (radius * cos(beta)) << ' ' <<
-                (radius * sin(beta) * cos(alfa + a_slices)) << '\n';
-        alfa = i*a_slices;
+          normalize(normals);
+
+          f << normals[0] << ' ' << normals[1] << ' ' << normals[2] <<  ' ';
+
+          sphere_text(alfa + d_alfa,beta,&textX,&textY);
+
+          f << textX << ' ' << textY << '\n';
+
+          normals[0]= (radius * cos(alfa) * cos(beta + d_beta));
+          normals[1]= (radius * sin(beta + d_beta));
+          normals[2]= (radius * sin(alfa) * cos(beta + d_beta));
+
+          f << (radius * cos(alfa) * cos(beta + d_beta)) << ' ' <<
+               (radius * sin(beta + d_beta)) << ' ' <<
+               (radius * sin(alfa) * cos(beta + d_beta)) << ' ';
+
+          normalize(normals);
+
+          f << normals[0] << ' ' << normals[1] << ' ' << normals[2] <<  ' ';
+
+          sphere_text(alfa,beta + d_beta,&textX,&textY);
+
+          f << textX << ' ' << textY << '\n';
+
+          normals[0]= (radius * cos(alfa + d_alfa) * cos(beta + d_beta));
+          normals[1]= (radius * sin(beta + d_beta));
+          normals[2]= (radius * sin(alfa + d_alfa) * cos(beta + d_beta));
+
+          f << (radius * cos(alfa + d_alfa) * cos(beta + d_beta)) << ' ' <<
+               (radius * sin(beta + d_beta)) << ' ' <<
+               (radius * sin(alfa + d_alfa) * cos(beta + d_beta)) << ' ';
+
+          normalize(normals);
+
+          f << normals[0] << ' ' << normals[1] << ' ' << normals[2] <<  ' ';
+
+          sphere_text(alfa + d_alfa,beta + d_beta,&textX,&textY);
+
+          f << textX << ' ' << textY << '\n';
+
+          normals[0]= (radius * cos(alfa + d_alfa) * cos(beta));
+          normals[1]= (radius * sin(beta));
+          normals[2]= (radius * sin(alfa + d_alfa) * cos(beta));
+
+          f << (radius * cos(alfa + d_alfa) * cos(beta)) << ' ' <<
+               (radius * sin(beta)) << ' ' <<
+               (radius * sin(alfa + d_alfa) * cos(beta)) << ' ';
+
+          normalize(normals);
+
+          f << normals[0] << ' ' << normals[1] << ' ' << normals[2] <<  ' ';
+
+          sphere_text(alfa + d_alfa,beta,&textX,&textY);
+
+          f << textX << ' ' << textY << '\n';
+
         }
-        beta = j * h_stack;
       }
     }
     f.close();
-
 }
 
 
@@ -348,117 +444,117 @@ Ponto* calcBezierPatch(std::vector<Ponto> controlPoints, int np, float u, float 
 
 // No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
 // função para fazer parse do ficheiro
-void bezier_patches(int tesselation, const char* file, const char* file2) {
-  std::ifstream f;
-  f.open(file);
-
-  int nBezier = 0;
-  int ncontrolPoints = 0;
-  int bezier = 0;
-  int i,j;
-  string aux,aux2;
-  std::vector<Ponto> pontos;
-
-
-  if ( f.is_open() ) {
-
-      getline(f, aux);
-      nBezier = stoi(aux);
-
-      std::vector<string> tokens;
-
-      //de 0 a 31 -> indices dos pontos controlo, 16 cada
-        for( i = 0; i < nBezier ;i++ ) {
-          std::string line;
-          getline(f,line);
-          tokens = split(line, ' ');
-          for( j = 0; j < nPatch ; j++ ) {
-            indices[i][j] = stoi(tokens[j],nullptr);
-
-          }
-          //int aux2 = stoi(line);
-          for( int u = 0; u < tokens.size(); u++){
-            indices[i][u] = stoi(tokens[u]);
-          }
-        }
-
-    getline(f,aux2);
-    ncontrolPoints = stoi(aux2); //nmr de control points
-    for( int z = 0; z < ncontrolPoints; z++ ){
-      std::string line1;
-      getline(f,line1);
-      tokens = split(line1, ',');
-      pontos.reserve(ncontrolPoints);
-      Ponto *p = new Ponto();
-      (*p).x = stof(tokens[0],nullptr);
-      (*p).y = stof(tokens[1],nullptr);
-      (*p).z = stof(tokens[2],nullptr);
-      pontos.push_back(*p);
-    }
-  }
-
-  f.close();
-
-
-  float u1, v1, u2, v2, inc = 1.0/tesselation;
-  Ponto* res[nBezier][4];
-  Shape* shape = new Shape();
-
-  for(int i=0; i<nBezier; i++){
-    for(int j=0; j<tesselation; j++){
-      for(int w=0; w<tesselation; w++){
-          u1 = j*inc;
-          v1 = w*inc;
-          u2 = (j+1)*inc;
-          v2 = (w+1)*inc;
-
-          res[i][0] = calcBezierPatch(pontos, i, u1, v1);
-          res[i][1] = calcBezierPatch(pontos, i, u2, v1);
-          res[i][2] = calcBezierPatch(pontos, i, u1, v2);
-          res[i][3] = calcBezierPatch(pontos, i, u2,v2);
-
-
-
-          Ponto *p0 = new Ponto();
-          (*p0).x = (res[i][0])->x;
-          (*p0).y = (res[i][0])->y;
-          (*p0).z = (res[i][0])->z;
-
-          Ponto *p1 = new Ponto();
-          (*p1).x = (res[i][1])->x;
-          (*p1).y = (res[i][1])->y;
-          (*p1).z = (res[i][1])->z;
-
-          Ponto *p3 = new Ponto();
-          (*p3).x = (res[i][3])->x;
-          (*p3).y = (res[i][3])->y;
-          (*p3).z = (res[i][3])->z;
-
-
-          Ponto *p2 = new Ponto();
-          (*p2).x = (res[i][2])->x;
-          (*p2).y = (res[i][2])->y;
-          (*p2).z = (res[i][2])->z;
-
-
-          //0,1,3
-          shape->inserePonto(p0);
-          shape->inserePonto(p1);
-          shape->inserePonto(p3);
-          //0,3,2
-          shape->inserePonto(p0);
-          shape->inserePonto(p3);
-          shape->inserePonto(p2);
-
-
-      }
-    }
-  }
-
-  shape->print(file2);
-
-
-}
+// void bezier_patches(int tesselation, const char* file, const char* file2) {
+//   std::ifstream f;
+//   f.open(file);
+//
+//   int nBezier = 0;
+//   int ncontrolPoints = 0;
+//   int bezier = 0;
+//   int i,j;
+//   string aux,aux2;
+//   std::vector<Ponto> pontos;
+//
+//
+//   if ( f.is_open() ) {
+//
+//       getline(f, aux);
+//       nBezier = stoi(aux);
+//
+//       std::vector<string> tokens;
+//
+//       //de 0 a 31 -> indices dos pontos controlo, 16 cada
+//         for( i = 0; i < nBezier ;i++ ) {
+//           std::string line;
+//           getline(f,line);
+//           tokens = split(line, ' ');
+//           for( j = 0; j < nPatch ; j++ ) {
+//             indices[i][j] = stoi(tokens[j],nullptr);
+//
+//           }
+//           //int aux2 = stoi(line);
+//           for( int u = 0; u < tokens.size(); u++){
+//             indices[i][u] = stoi(tokens[u]);
+//           }
+//         }
+//
+//     getline(f,aux2);
+//     ncontrolPoints = stoi(aux2); //nmr de control points
+//     for( int z = 0; z < ncontrolPoints; z++ ){
+//       std::string line1;
+//       getline(f,line1);
+//       tokens = split(line1, ',');
+//       pontos.reserve(ncontrolPoints);
+//       Ponto *p = new Ponto();
+//       (*p).x = stof(tokens[0],nullptr);
+//       (*p).y = stof(tokens[1],nullptr);
+//       (*p).z = stof(tokens[2],nullptr);
+//       pontos.push_back(*p);
+//     }
+//   }
+//
+//   f.close();
+//
+//
+//   float u1, v1, u2, v2, inc = 1.0/tesselation;
+//   Ponto* res[nBezier][4];
+//   Shape* shape = new Shape();
+//
+//   for(int i=0; i<nBezier; i++){
+//     for(int j=0; j<tesselation; j++){
+//       for(int w=0; w<tesselation; w++){
+//           u1 = j*inc;
+//           v1 = w*inc;
+//           u2 = (j+1)*inc;
+//           v2 = (w+1)*inc;
+//
+//           res[i][0] = calcBezierPatch(pontos, i, u1, v1);
+//           res[i][1] = calcBezierPatch(pontos, i, u2, v1);
+//           res[i][2] = calcBezierPatch(pontos, i, u1, v2);
+//           res[i][3] = calcBezierPatch(pontos, i, u2,v2);
+//
+//
+//
+//           Ponto *p0 = new Ponto();
+//           (*p0).x = (res[i][0])->x;
+//           (*p0).y = (res[i][0])->y;
+//           (*p0).z = (res[i][0])->z;
+//
+//           Ponto *p1 = new Ponto();
+//           (*p1).x = (res[i][1])->x;
+//           (*p1).y = (res[i][1])->y;
+//           (*p1).z = (res[i][1])->z;
+//
+//           Ponto *p3 = new Ponto();
+//           (*p3).x = (res[i][3])->x;
+//           (*p3).y = (res[i][3])->y;
+//           (*p3).z = (res[i][3])->z;
+//
+//
+//           Ponto *p2 = new Ponto();
+//           (*p2).x = (res[i][2])->x;
+//           (*p2).y = (res[i][2])->y;
+//           (*p2).z = (res[i][2])->z;
+//
+//
+//           //0,1,3
+//           shape->inserePonto(p0);
+//           shape->inserePonto(p1);
+//           shape->inserePonto(p3);
+//           //0,3,2
+//           shape->inserePonto(p0);
+//           shape->inserePonto(p3);
+//           shape->inserePonto(p2);
+//
+//
+//       }
+//     }
+//   }
+//
+//   shape->print(file2);
+//
+//
+// }
 
 
 void help(){
@@ -559,7 +655,7 @@ std::string folder = "models/";
     else {
       folder.append(argv[4]);
       const char* file = folder.c_str();
-      bezier_patches(stoi(argv[2]), argv[3], file );
+      //bezier_patches(stoi(argv[2]), argv[3], file );
     }
   }
   else if (!str.compare("-help"))
