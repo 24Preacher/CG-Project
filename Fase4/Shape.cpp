@@ -32,18 +32,12 @@ float m,n,c;
 
   vector<Ponto*>::iterator point_it;
     int vertex = 0;
-    // for(point_it = textcoords->begin(); point_it != textcoords->end(); point_it++){
-    //   Ponto * p = (*point_it);
-    //   textures.push_back(p->x);
-    //   textures.push_back(p->y);
-    //
-    //   vertex++;
-    // }
+    vertex=0;
     for(point_it = pontos->begin(); point_it != pontos->end(); point_it++){
         Ponto * p = (*point_it);
         array_vertexs[vertex*3 + 0] = p->x;
-        array_vertexs[vertex*3 + 1] = p->x;
-        array_vertexs[vertex*3 + 2] = p->x;
+        array_vertexs[vertex*3 + 1] = p->y;
+        array_vertexs[vertex*3 + 2] = p->z;
 
         vertex++;
     }
@@ -56,14 +50,22 @@ float m,n,c;
 
         vertex++;
     }
+    vertex=0;
+    for(point_it = textcoords->begin(); point_it != textcoords->end(); point_it++){
+      Ponto * p = (*point_it);
+      textures.push_back(p->x);
+      textures.push_back(p->y);
+
+      vertex++;
+    }
 
 
-   for (asa=0;asa<n_vertices*3;asa+=3){
-     printf("array_vertexs %d : %f,%f,%f\n",asa/3,array_vertexs[asa],array_vertexs[asa+1],array_vertexs[asa+2] );
-   }
-   for (asa=0;asa<n_vertices*3;asa+=3){
-     printf("array_normal %d : %f,%f,%f\n",asa/3,array_normal[asa],array_normal[asa+1],array_normal[asa+2] );
-   }
+   // for (asa=0;asa<n_vertices*3;asa+=3){
+   //   printf("array_vertexs %d : %f,%f,%f\n",asa/3,array_vertexs[asa],array_vertexs[asa+1],array_vertexs[asa+2] );
+   // }
+   // for (asa=0;asa<n_vertices*3;asa+=3){
+   //   printf("array_normal %d : %f,%f,%f\n",asa/3,array_normal[asa],array_normal[asa+1],array_normal[asa+2] );
+   // }
 
 
    cleanVector(pontos);
@@ -132,10 +134,10 @@ void Shape::addMaterial(Material* m){
 void Shape::draw(){
 
 
-// vector<Material*>::iterator it2;
-// for(it2 = materials.begin(); it2 != materials.end(); it2++){
-//   (*it2)->draw();
-// }
+vector<Material*>::iterator it2;
+for(it2 = materials.begin(); it2 != materials.end(); it2++){
+  (*it2)->draw();
+}
 
 glBindTexture(GL_TEXTURE_2D, textura);
 
@@ -175,4 +177,5 @@ void Shape::cleanVector(vector<Ponto*> * limpar){
     for(it = limpar->begin(); it != limpar->end(); it++){
         delete((*it));
     }
+    delete(limpar);
 }

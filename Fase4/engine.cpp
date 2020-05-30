@@ -20,7 +20,7 @@ int frame=0,timebase=0;
 shapeMatrix sM;
 vector<Light*> lights;
 instructionsMatrix inst;
-int mode = GL_FILL;
+int mode = GL_LINE;
 
 
 
@@ -117,8 +117,7 @@ void drawPoints (){
 		glPushMatrix();
 		for(j=0;j<inst[i].size();j++){
 			runInstruction(i,j);
-
-			}
+		}
 
 			drawModel(i);
 		glPopMatrix();
@@ -128,12 +127,12 @@ void drawPoints (){
 void renderLights(){
 
 	// GLfloat ambient[4] = {0.2, 0.2, 0.2, 1.0};
-  // GLfloat diffuse[4] = {0.8, 0.2, 0.2, 1.0};
+  // GLfloat diffuse[4] = {0.2, 0.2, 0.2, 1.0};
   // GLfloat specular[4] = {1.0, 1.0, 1.0, 1.0};
   // GLfloat emission[4] = {0.1, 0.1, 0.1, 1.0};
 
-	// GLfloat pos [4] = {0.0,0.0,0.0,1.0};
-	// glLightfv(GL_LIGHT0, GL_POSITION, pos );
+	GLfloat pos [4] = {0.0,0.0,0.0,1.0};
+	glLightfv(GL_LIGHT0, GL_POSITION, pos );
  	// glLightfv(GL_LIGHT0, GL_AMBIENT, ambient );
   // glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse );
   // glLightfv(GL_LIGHT0, GL_SPECULAR, specular );
@@ -222,12 +221,15 @@ void processKeys(unsigned char c, int xx, int yy) {
 		case 'm':
 			if(mode == GL_LINE){
 				mode = GL_POINT;
+				printf("point\n" );
 				break;
 			}else if(mode == GL_POINT){
 				mode = GL_FILL;
+				printf("fill\n" );
 				break;
 			}else if(mode == GL_FILL){
 				mode = GL_LINE;
+				printf("line\n" );
 				break;
 			}
 			break;
@@ -296,8 +298,8 @@ void init() {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 
-		// glEnable(GL_LIGHTING);
-		// glEnable(GL_LIGHT0);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
 
 
 }

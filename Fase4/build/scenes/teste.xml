@@ -1,5 +1,20 @@
 <scene>
   <group>
+    <translate time="50" >
+      <point X="40" Y="0" Z="-30" />
+      <point X="40" Y="0" Z="30" />
+      <point X="15" Y="0" Z="80" />
+      <point X= "-15" Y="0" Z="80"/>
+      <point X= "-40" Y="0" Z="30"/>
+      <point X= "-40" Y="0" Z="-30"/>
+      <point X= "-15" Y="0" Z="-80"/>
+      <point X= "15" Y="0" Z="-80"/>
+    </translate>
+    <models>
+      <model file="models/esfera.3d" diffR="0.8" diffG="0.1" diffB="0.1"  />
+    </models>
+  </group>
+  <group>
       <translate time="10" >
         <point X="4" Y="0" Z="-3" />
         <point X="4" Y="0" Z="3" />
@@ -11,7 +26,7 @@
         <point X= "1.5" Y="0" Z="-8"/>
       </translate>
         <models>
-          <model file="models/esfera.3d" />
+          <model file="models/esfera.3d"  texture="textures/earthmap1k.jpg" diffR="1" diffG="1" diffB="1"/>
       </models>
   </group>
 </scene>
