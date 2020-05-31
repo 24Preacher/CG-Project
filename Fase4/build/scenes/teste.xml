@@ -16,7 +16,7 @@
   <group>
     <rotate time="10" X="1" Y="1" Z="1"/>
     <models>
-      <model file="models/teaeepot.3d" />
+      <model file="models/torus.3d" />
     </models>
     </group>
   </group>

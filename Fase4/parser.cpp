@@ -545,8 +545,6 @@ void parseModels (XMLNode* pNode, shapeMatrix* shape, instructionsMatrix* instru
       }
       infile.close();
         const char* textura = pParm-> ToElement() -> Attribute("texture");
-        cout << textura << endl;
-        cout.flush();
 
        figura = new Shape(pontos,normals,textcoords,textura);
       if (pParm-> ToElement() -> Attribute("diffR")){
@@ -623,7 +621,6 @@ void parseModels (XMLNode* pNode, shapeMatrix* shape, instructionsMatrix* instru
       figura->addMaterial(material);
 
     }
-      figura->print();
     (*shape)[*i].push_back(figura);
     }
   }

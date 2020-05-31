@@ -29,7 +29,7 @@
                 <rotate time="10" X="0" Y="1" Z="0"/>
                 <scale X="0.3" Y="0.3" Z="0.3" />
                 <models>
-                    <model file="models/sphere.3d" texture="textures/2k_mercury.jpg" />
+                    <model file="models/sphere.3d" texture="textures/2k_mercury.jpg"  emiR= "0" emiG="0" emiB="0" />
                 </models>
             </group>
         </group>
@@ -163,6 +163,14 @@
                 <scale X="0.8" Y="0.8" Z="0.8" />
                 <models>
                     <model file="models/sphere.3d" texture="textures/2k_saturn.jpg"/>
+                </models>
+            </group>
+            <group>
+               <colour Red="182" Green="170" Blue="130" />
+                <rotate angle="30" X="0" Y="0" Z="1" />
+                <scale X="0.8" Y="0.1" Z="0.8" />
+                <models>
+                    <model file="models/torus.3d"/>
                 </models>
             </group>
         </group>

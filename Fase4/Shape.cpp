@@ -60,14 +60,6 @@ float m,n,c;
     }
 
 
-   // for (asa=0;asa<n_vertices*3;asa+=3){
-   //   printf("array_vertexs %d : %f,%f,%f\n",asa/3,array_vertexs[asa],array_vertexs[asa+1],array_vertexs[asa+2] );
-   // }
-   // for (asa=0;asa<n_vertices*3;asa+=3){
-   //   printf("array_normal %d : %f,%f,%f\n",asa/3,array_normal[asa],array_normal[asa+1],array_normal[asa+2] );
-   // }
-
-
    cleanVector(pontos);
    cleanVector(normals);
 
