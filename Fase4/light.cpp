@@ -16,58 +16,116 @@ float* Light::getPosicao(){
     return posicao;
 }
 
+void Light::addPos(float* posicao ){
 
-Light::Light(int type, float *pos, float * dir ,float *adds, float* ambient, float* diffuse, float* specular) {
+  for( int i = 0; i < 4; i++ )
+    this->posicao[i] = posicao[i];
+
+}
+
+void Light::addAmb(float* ambient ){
+
+  for( int i = 0; i < 3; i++ )
+    this->ambient[i] = ambient[i];
+}
+
+void Light::addSpec (float* specular ){
+
+  for( int i = 0; i < 3; i++ )
+    this->specular[i] = specular[i];
+
+}
+
+void Light::addDiff(float* diffuse ){
+
+  for( int i = 0; i < 3; i++ )
+    this->diffuse[i] = diffuse[i];
+
+}
+
+void Light::addAdds(float* adds ){
+
+  for( int i = 0; i < 3; i++ )
+    this->adds[i] = adds[i];
+
+}
+
+void Light::addDir(float* direcao ){
+
+  for( int i = 0; i < 3; i++ )
+    this->direcao[i] = direcao[i];
+
+}
+
+
+Light::Light( int type ) {
 
     this->type = type;
 
-    this->posicao[0] = pos[0];
-    this->posicao[1] = pos[1];
-    this->posicao[2] = pos[2];
-    this->posicao[3] = pos[3];
+    if( type == 1 ){
 
-    this->direcao[0] = dir[0];
-    this->direcao[1] = dir[1];
-    this->direcao[2] = dir[2];
+      this->posicao[0] = 1.0;
+      this->posicao[1] = 1.0;
+      this->posicao[2] = 1.0;
+      this->posicao[3] = 1.0;
 
-    this->adds[0] = adds[0];
-    this->adds[1] = adds[1];
-    this->adds[2] = adds[2];
+    }else if (type == 2 ){
 
-    this->ambient[0] = ambient[0];
-    this->ambient[1] = ambient[1];
-    this->ambient[2] = ambient[2];
+      this->posicao[0] = 1.0;
+      this->posicao[1] = 1.0;
+      this->posicao[2] = 1.0;
+      this->posicao[3] = 0.0;
 
-    this->diffuse[0] = diffuse[0];
-    this->diffuse[1] = diffuse[1];
-    this->diffuse[2] = diffuse[2];
+    }else if( type == 3 ){
 
-    this->specular[0] = specular[0];
-    this->specular[1] = specular[1];
-    this->specular[2] = specular[2];
+      this->posicao[0] = 1.0;
+      this->posicao[1] = 1.0;
+      this->posicao[2] = 1.0;
+      this->posicao[3] = 1.0;
+
+      this->direcao[0] = 0;
+      this->direcao[1] = 0;
+      this->direcao[2] = -1;
+    }
+
+    this->ambient[0] = 0.2;
+    this->ambient[1] = 0.2;
+    this->ambient[2] = 0.2;
+
+    this->diffuse[0] = 1;
+    this->diffuse[1] = 1;
+    this->diffuse[2] = 1;
+
+    this->specular[0] = 1;
+    this->specular[1] = 1;
+    this->specular[2] = 1;
+
+    this->adds[0] = 180; //cutoff
+    this->adds[1] = 0; //exponent
+    this->adds[2] = 1; //attenuation
 
 }
 
 
 void Light::draw(){
 
-  GLfloat ambient[4] = {0.2, 0.05, 0.05, 1.0};
-  GLfloat diffuse[4] = {0.8, 0.2, 0.2, 1.0};
-  GLfloat specular[4] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat emission[4] = {0.0, 0.0, 0.0, 1.0};
+
 	GLfloat pos[4] = {posicao[0], posicao[1] , posicao[2], posicao[3]};
 
 
   if (type == 3 ) {
 
+    glLightfv(GL_LIGHT0, GL_POSITION, pos );
     glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direcao);
     glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, adds[0]); // [0,90] ou 180
     glLightf(GL_LIGHT0,GL_SPOT_EXPONENT, adds[1]); // [0,128]
     glLightf(GL_LIGHT0,GL_QUADRATIC_ATTENUATION, adds[2]); //de 0 a 1
+    
 
   }
 
   else{
+
     glLightfv(GL_LIGHT0, GL_POSITION, pos );
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient );
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse );

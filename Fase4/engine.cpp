@@ -130,12 +130,15 @@ void renderLights(){
   // GLfloat diffuse[4] = {0.2, 0.2, 0.2, 1.0};
   // GLfloat specular[4] = {1.0, 1.0, 1.0, 1.0};
   // GLfloat emission[4] = {0.1, 0.1, 0.1, 1.0};
+	//vector<Light*> lights;
+	// glLightfv(GL_LIGHT0, GL_AMBIENT, ambient );
+	// glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse );
+	// glLightfv(GL_LIGHT0, GL_SPECULAR, specular );
+	
+	for( int j = 0; j < lights.size(); j++ ){
+		lights.at(j)->draw();
+	}
 
-	GLfloat pos [4] = {0.0,0.0,0.0,1.0};
-	glLightfv(GL_LIGHT0, GL_POSITION, pos );
- 	// glLightfv(GL_LIGHT0, GL_AMBIENT, ambient );
-  // glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse );
-  // glLightfv(GL_LIGHT0, GL_SPECULAR, specular );
 
 }
 
