@@ -31,11 +31,7 @@ void calcNormals(vector<Ponto*>* pontos,vector<Ponto*>* normals){
   vector<Ponto*>pontosIguais;
   for(i=0;i<pontos->size();i++){
     Ponto * p = pontos -> at(i);
-    printf("ponto %d:", i);
-    printPoint(p);
     if(!(pertenceP(p,(&pontosIguais)))){
-      printf("ponto %d:", i);
-      printPoint(p);
     vector<Ponto*> npontosIguais;
     vector<int> indices;
     for(j=0;j<pontos->size();j++){
@@ -45,7 +41,7 @@ void calcNormals(vector<Ponto*>* pontos,vector<Ponto*>* normals){
       }
     }
     for(a=0;a<indices.size();a++){
-      npontosIguais.push_back(normals->at(i));
+      npontosIguais.push_back(normals->at((indices.at(a))));
     }
       Ponto* norm = new Ponto();
       meanP(&npontosIguais,norm);
@@ -55,10 +51,6 @@ void calcNormals(vector<Ponto*>* pontos,vector<Ponto*>* normals){
       }
     }
   }
-for(i=0;i<normals->size();i++){
-  printf("normal %d:", i);
-  printPoint(normals->at(i));
-}
 
 }
 
@@ -67,10 +59,7 @@ void prinTofile(vector<Ponto*>* pontos,vector<Ponto*>* normals,vector<Ponto*>* t
   int i;
   ofstream f (filename,ios::out| ios::trunc );
   if(f.is_open()){
-    printf("1\n" );
-    printf("%ld,%ld,%ld\n",pontos->size(),normals->size(),textcoords->size() );
     if(pontos->size()==normals->size() && normals->size()==textcoords->size()){
-      printf("2\n" );
 
     for (i=0;i<pontos->size();i++){
       f << pontos -> at(i) -> x << ' '
@@ -89,16 +78,6 @@ void prinTofile(vector<Ponto*>* pontos,vector<Ponto*>* normals,vector<Ponto*>* t
     printf("wrong vectors\n" );
   }
 
-  vector<Ponto*>::iterator it;
-  for(it = pontos->begin(); it != pontos->end(); it++){
-      delete((*it));
-  }
-  for(it = normals->begin(); it != normals->end(); it++){
-      delete((*it));
-  }
-  for(it = textcoords->begin(); it != textcoords->end(); it++){
-      delete((*it));
-  }
 }
 
 
@@ -219,15 +198,6 @@ void make_Plane (float comprimento, float largura, const char* file){
     calcNormals(&pontos,&normals);
     prinTofile(&pontos,&normals,&textcoords,file);
 
-/*
-    f << cx << ' ' << 0.0 << ' ' << cz << '\n'
-    	<< cx << ' ' << 0.0 << ' ' << -cz << '\n'
-    	<< -cx << ' ' << 0.0 << ' ' << -cz << '\n'
-
-      << cx << ' ' << 0.0 << ' ' << cz << '\n'
-      << -cx << ' ' << 0.0 << ' ' << -cz << '\n'
-      << -cx << ' ' << 0.0 << ' ' << cz << '\n';*/
-
 
 }
 
@@ -245,8 +215,6 @@ void make_Box (float comprimento, float largura, float altura, int divisoes, con
     for (i = 0; i < divisoes; i++) {
     for (j = 0; j < divisoes; j++) {
 
-
-      //face da frente
       Ponto* p1 = new Ponto();
       p1->x = -cx + j*rx;
       p1->y = -cy + i*ry;
@@ -350,8 +318,6 @@ void make_Box (float comprimento, float largura, float altura, int divisoes, con
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
 
-
-      //face de cima
       p1 = new Ponto();
       p1->x = -cx + j*rx;
       p1->y = cy;
@@ -454,9 +420,6 @@ void make_Box (float comprimento, float largura, float altura, int divisoes, con
       textcoords.push_back(tp1);
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
-
-
-      //face de trás
 
       p1 = new Ponto();
       p1->x = -cx + j*rx;
@@ -561,8 +524,6 @@ void make_Box (float comprimento, float largura, float altura, int divisoes, con
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
 
-
-      //face de baixo
       p1 = new Ponto();
       p1->x = -cx + j*rx;
       p1->y = -cy;
@@ -667,8 +628,6 @@ void make_Box (float comprimento, float largura, float altura, int divisoes, con
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
 
-
-      //face da esquerda
       p1 = new Ponto();
       p1->x = -cx;
       p1->y = -cy + i*ry;
@@ -771,8 +730,6 @@ void make_Box (float comprimento, float largura, float altura, int divisoes, con
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
 
-
-      //face direita
       p1 = new Ponto();
       p1->x = cx;
       p1->y = -cy + i*ry +ry;
@@ -1034,8 +991,6 @@ void make_Cone(float radius, float height, int slices, int stacks, const char* f
     vector<Ponto*> normals;
     vector<Ponto*> textcoords;
 
-
-  	//base
         for(i=0; i<slices; i++){
           tempangulo = i*ang_slices;
 
@@ -1090,14 +1045,8 @@ void make_Cone(float radius, float height, int slices, int stacks, const char* f
           textcoords.push_back(tp2);
           textcoords.push_back(tp3);
 
-/*
-          f << radius * sin(tempangulo) << ' ' << 0 << ' '<< radius * cos(tempangulo) << '\n'
-            << 0 << ' ' << 0 << ' ' << 0 << '\n'
-            << radius * sin(tempangulo + ang_slices) << ' ' << 0 << ' ' << radius * cos(tempangulo + ang_slices) << '\n';*/
-
 					}
 
-		//lados
 		tempradius = radius/stacks;
 			for(j=0; j<stacks; j++){
 				for(i=0; i<slices; i++){
@@ -1209,7 +1158,6 @@ void make_Cone(float radius, float height, int slices, int stacks, const char* f
           textcoords.push_back(tp2);
           textcoords.push_back(tp3);
 
-
 				}
 			}
         calcNormals(&pontos,&normals);
@@ -1221,7 +1169,7 @@ void make_Cone(float radius, float height, int slices, int stacks, const char* f
 
 void make_Cylinder(float radius, float height, int slices, const char* file) {
 
-float n_angle = 2 * M_PI / slices; //angulo de casa slice
+float n_angle = 2 * M_PI / slices;
 float angle;
 ofstream f (file,ios::out| ios::trunc );
 vector<Ponto*> pontos;
@@ -1231,7 +1179,6 @@ vector<Ponto*> textcoords;
 for(int i = 0; i < slices; i++){
     angle = n_angle * i;
 
-    //base de cima
       Ponto* p1 = new Ponto();
       p1->x = radius * cos(angle);
       p1->y = height/2;
@@ -1283,8 +1230,6 @@ for(int i = 0; i < slices; i++){
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
 
-
-      //lateral
       p1 = new Ponto();
       p1->x = radius * cos(angle);
       p1->y = height/2;
@@ -1295,12 +1240,10 @@ for(int i = 0; i < slices; i++){
       p2->y = height/2;
       p2->z = radius * sin(angle + n_angle);
 
-
       p3 = new Ponto();
       p3->x = radius * cos(angle);
       p3->y = -height/2;
       p3->z = radius * sin(angle);
-
 
       pontos.push_back(p1);
       pontos.push_back(p2);
@@ -1338,7 +1281,6 @@ for(int i = 0; i < slices; i++){
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
 
-      //lateral
       p1 = new Ponto();
       p1->x = radius*cos(angle + n_angle);
       p1->y = height/2;
@@ -1390,8 +1332,6 @@ for(int i = 0; i < slices; i++){
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
 
-      //base de baixo
-
       p1 = new Ponto();
       p1->x = 0;
       p1->y = -height/2;
@@ -1442,9 +1382,6 @@ for(int i = 0; i < slices; i++){
       textcoords.push_back(tp1);
       textcoords.push_back(tp2);
       textcoords.push_back(tp3);
-
-
-
   }
 
 calcNormals(&pontos,&normals);
@@ -1481,7 +1418,6 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
         p3->y = inside_radius * sin(beta);
         p3->z = (outside_radius + inside_radius * cos(beta)) * sin(alfa + a);
 
-
         pontos.push_back(p1);
         pontos.push_back(p2);
         pontos.push_back(p3);
@@ -1517,7 +1453,6 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
         textcoords.push_back(tp1);
         textcoords.push_back(tp2);
         textcoords.push_back(tp3);
-
 
         p1 = new Ponto();
         p1->x = (outside_radius + inside_radius * cos(beta)) * cos(alfa);
@@ -1570,26 +1505,12 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
         textcoords.push_back(tp2);
         textcoords.push_back(tp3);
 
-        /*
-        f
-          << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius *cos(beta + b)) * sin(alfa) << '\n'
-          << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa + a) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius * cos(beta + b)) * sin(alfa + a) << '\n'
-          << (outside_radius + inside_radius * cos(beta)) * cos(alfa + a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa + a) << '\n'
-
-          << (outside_radius + inside_radius * cos(beta)) * cos(alfa) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa) << '\n'
-          << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius * cos(beta + b)) * sin(alfa) << '\n'
-          << (outside_radius + inside_radius * cos(beta)) * cos(alfa + a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa + a) << '\n'; */
-
-
-      }
+            }
     }
 
     calcNormals(&pontos,&normals);
     prinTofile(&pontos,&normals,&textcoords,file);
 }
-
-
-//-------------resolução da addams
 
 
 vector<string> split(const string& s, char delimiter)
@@ -1611,7 +1532,6 @@ Ponto* pontosBezier(float *p1, float *p2, float *p3, float *p4, float t){
     float x = (1 - t);
     float ponto[3];
 
-    //ver slides das curvas - bezier curves degree 3
     float x0,x1,x2,x3;
     x0 = pow(x, 3);
     x1 = 3 * x * pow(x,2) * t;
@@ -1634,11 +1554,6 @@ Ponto* pontosBezier(float *p1, float *p2, float *p3, float *p4, float t){
 }
 
 
-
-
-//ver slides das curvas - bezier patches (pontos verdes- control points e ponto vermelho- ponto no patch)
-//nos patches usa-se o u em vez do t
-//temos que obter 4 pontos (control points) para o calculo de bezier
 Ponto* calcBezierPatch(vector<Ponto> controlPoints, int np, float u, float v){
     int n = 16;
     float aux[n][3], res[n][3];
@@ -1650,7 +1565,6 @@ Ponto* calcBezierPatch(vector<Ponto> controlPoints, int np, float u, float v){
       aux[j][1] = controlPoints[indices[np][i]].y;
       aux[j][2] = controlPoints[indices[np][i]].z;
       j++;
-      //j é multiplo de 4 pq são precisos 4 pontos para cada calculo de Bezier
       if(j % 4 == 0){
         p = pontosBezier(aux[0], aux[1], aux[2], aux[3], u);
         res[w][0] = p->x;
@@ -1667,9 +1581,6 @@ Ponto* calcBezierPatch(vector<Ponto> controlPoints, int np, float u, float v){
     return ponto;
 }
 
-
-//No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
-//função para fazer parse do ficheiro
 void bezier_patches(int tesselation, const char* file, const char* file2) {
   std::ifstream f;
   f.open(file);
@@ -1682,15 +1593,13 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
   vector<Ponto> pontos1;
 
 
-
-  if ( f.is_open() ) {
+  if ( f.is_open()) {
 
       getline(f, aux);
       nBezier = stoi(aux);
 
       std::vector<string> tokens;
 
-      //de 0 a 31 -> indices dos pontos controlo, 16 cada
         for( i = 0; i < nBezier ;i++ ) {
           std::string line;
           getline(f,line);
@@ -1699,14 +1608,15 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
             indices[i][j] = stoi(tokens[j],nullptr);
 
           }
-          //int aux2 = stoi(line);
           for( int u = 0; u < tokens.size(); u++){
             indices[i][u] = stoi(tokens[u]);
           }
+
         }
 
+
     getline(f,aux2);
-    ncontrolPoints = stoi(aux2); //nmr de control points
+    ncontrolPoints = stoi(aux2);
     for( int z = 0; z < ncontrolPoints; z++ ){
       std::string line1;
       getline(f,line1);
@@ -1718,9 +1628,11 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
       (*p).z = stof(tokens[2],nullptr);
       pontos1.push_back(*p);
     }
+
   }
 
   f.close();
+
 
   vector<Ponto*> pontos;
   vector<Ponto*> normals;
@@ -1740,7 +1652,6 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
           res[i][1] = calcBezierPatch(pontos1, i, u2, v1);
           res[i][2] = calcBezierPatch(pontos1, i, u1, v2);
           res[i][3] = calcBezierPatch(pontos1, i, u2,v2);
-
 
 
           Ponto *p0 = new Ponto();
@@ -1764,15 +1675,6 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
           (*p2).y = (res[i][2])->y;
           (*p2).z = (res[i][2])->z;
 
-
-          //0,1,3
-          // shape->inserePonto(p0);
-          // shape->inserePonto(p1);
-          // shape->inserePonto(p3);
-          //0,3,2
-          // shape->inserePonto(p0);
-          // shape->inserePonto(p3);
-          // shape->inserePonto(p2);
           pontos.push_back(p0);
           pontos.push_back(p1);
           pontos.push_back(p3);
@@ -1809,7 +1711,6 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
           textcoords.push_back(tp2);
           textcoords.push_back(tp3);
 
-
           pontos.push_back(p0);
           pontos.push_back(p3);
           pontos.push_back(p2);
@@ -1845,14 +1746,12 @@ void bezier_patches(int tesselation, const char* file, const char* file2) {
           textcoords.push_back(tp1);
           textcoords.push_back(tp2);
           textcoords.push_back(tp3);
-
-
       }
     }
   }
 
   calcNormals(&pontos,&normals);
-  prinTofile(&pontos,&normals,&textcoords,file);
+  prinTofile(&pontos,&normals,&textcoords,file2);
 
 
 }
@@ -1884,6 +1783,10 @@ printf ( " |                                                                    
 printf ( " |   ‣ Torus                                                                                        |\n");
 printf ( " |                                                                                                  |\n");
 printf ( " |       $ ./generator torus <raio interior> <raio exterior> <Slices> <Stacks> <OUTPUT_FILE>        |\n");
+printf ( " |                                                                                                  |\n");
+printf ( " |   ‣ Bezier                                                                                       |\n");
+printf ( " |                                                                                                  |\n");
+printf ( " |       $ ./generator bezier <tesselation> <INPUT_FILE> <OUTPUT_FILE>                              |\n");
 printf ( " |                                                                                                  |\n");
 printf ( " |                                                                                                  |\n");
 printf ( " └--------------------------------------------------------------------------------------------------┘\n");
@@ -1956,7 +1859,8 @@ std::string folder = "models/";
     else {
       folder.append(argv[4]);
       const char* file = folder.c_str();
-      //bezier_patches(stoi(argv[2]), argv[3], file );
+      bezier_patches(stoi(argv[2]), argv[3], file );
+      printf("9\n");
     }
   }
   else if (!str.compare("-help"))

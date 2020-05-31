@@ -106,9 +106,7 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
 
       (*lights).push_back(in);
 
-      printf("type = %d\n", type );
-      for(int y = 0; y < 4;y++)
-        printf("posicao [%d] %f\n", y, posicao[y] );
+
     }
     else if((strcmp (pParm -> ToElement() -> Attribute("type"), "DIRECTIONAL")) == 0){
       //DIRECTIONAL
@@ -551,28 +549,19 @@ void parseModels (XMLNode* pNode, shapeMatrix* shape, instructionsMatrix* instru
         cout.flush();
 
        figura = new Shape(pontos,normals,textcoords,textura);
-       printf("numero de vertices da figura: %d\n",figura->getNVertices());
-       cout << figura->getNVertices() << endl;
-       cout.flush();
-       figura -> print();
       if (pParm-> ToElement() -> Attribute("diffR")){
-        printf("teste1\n" );
       if (pParm-> ToElement() -> Attribute("diffR")){
         colorR = stof(pParm -> ToElement() -> Attribute("diffR"));
-        printf("teste2\n" );
       }
       if (pParm-> ToElement() -> Attribute("diffG")){
-        printf("teste3\n" );
         colorG = stof(pParm -> ToElement() -> Attribute("diffG"));
       }
       if (pParm-> ToElement() -> Attribute("diffB")){
-        printf("teste4\n" );
         colorB = stof(pParm -> ToElement() -> Attribute("diffB"));
       }
       cores[0]=colorR;
       cores[1]=colorG;
       cores[2]=colorB;
-      printf("teste\n" );
       Material* material = new Material(2,0,cores);
       figura->addMaterial(material);
 
