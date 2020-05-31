@@ -6,12 +6,6 @@
 #include <vector>
 #include "utils.h"
 
-typedef struct {
-  float x;
-  float y;
-  float z;
-} Ponto;
-
 class Instruction {
 
 private:

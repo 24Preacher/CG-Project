@@ -508,16 +508,6 @@ void parseModels (XMLNode* pNode, shapeMatrix* shape, instructionsMatrix* instru
 
         std::vector<string> tokens;
         tokens = split(line, ' ');
-
-        // printf("%d %f %f %f %f %f %f %f %f\n", a,
-        // stof(tokens[0]),
-        // stof(tokens[1]),
-        // stof(tokens[2]),
-        // stof(tokens[3]),
-        // stof(tokens[4]),
-        // stof(tokens[5]),
-        // stof(tokens[6]),
-        // stof(tokens[7]) );
         Ponto *p = new Ponto();
         (*p).x = stof(tokens[0],nullptr);
         (*p).y = stof(tokens[1],nullptr);

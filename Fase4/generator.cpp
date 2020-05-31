@@ -26,21 +26,208 @@ int indices[32][16];
 const int nPatch = 16;
 
 
+void calcNormals(vector<Ponto*>* pontos,vector<Ponto*>* normals){
+  int i,j,a;
+  vector<Ponto*>pontosIguais;
+  for(i=0;i<pontos->size();i++){
+    Ponto * p = pontos -> at(i);
+    printf("ponto %d:", i);
+    printPoint(p);
+    if(!(pertenceP(p,(&pontosIguais)))){
+      printf("ponto %d:", i);
+      printPoint(p);
+    vector<Ponto*> npontosIguais;
+    vector<int> indices;
+    for(j=0;j<pontos->size();j++){
+      if(equalsP(p,(pontos -> at(j)))){
+        pontosIguais.push_back((pontos -> at(j)));
+        indices.push_back(j);
+      }
+    }
+    for(a=0;a<indices.size();a++){
+      npontosIguais.push_back(normals->at(i));
+    }
+      Ponto* norm = new Ponto();
+      meanP(&npontosIguais,norm);
+      normalizeP(norm);
+      for(a=0;a<indices.size();a++){
+        copyP(norm,normals->at(a));
+      }
+    }
+  }
+for(i=0;i<normals->size();i++){
+  printf("normal %d:", i);
+  printPoint(normals->at(i));
+}
+
+}
+
+
+void prinTofile(vector<Ponto*>* pontos,vector<Ponto*>* normals,vector<Ponto*>* textcoords,const char* filename){
+  int i;
+  ofstream f (filename,ios::out| ios::trunc );
+  if(f.is_open()){
+    printf("1\n" );
+    printf("%ld,%ld,%ld\n",pontos->size(),normals->size(),textcoords->size() );
+    if(pontos->size()==normals->size() && normals->size()==textcoords->size()){
+      printf("2\n" );
+
+    for (i=0;i<pontos->size();i++){
+      f << pontos -> at(i) -> x << ' '
+        << pontos -> at(i) -> y << ' '
+        << pontos -> at(i) -> z << ' '
+        << normals -> at(i) -> x << ' '
+        << normals -> at(i) -> y << ' '
+        << normals -> at(i) -> z << ' '
+        << textcoords -> at(i) -> x << ' '
+        << textcoords -> at(i) -> y << '\n';
+      }
+    }
+    f.close();
+  }
+  else{
+    printf("wrong vectors\n" );
+  }
+
+  vector<Ponto*>::iterator it;
+  for(it = pontos->begin(); it != pontos->end(); it++){
+      delete((*it));
+  }
+  for(it = normals->begin(); it != normals->end(); it++){
+      delete((*it));
+  }
+  for(it = textcoords->begin(); it != textcoords->end(); it++){
+      delete((*it));
+  }
+}
+
 
 void make_Plane (float comprimento, float largura, const char* file){
-  ofstream f (file, ios::out| ios::trunc );
   float cx = comprimento/2;
 	float cz = largura/2;
 
-  if(f.is_open()){
+
+
+    vector<Ponto*> pontos;
+    vector<Ponto*> normals;
+    vector<Ponto*> textcoords;
+
+
+    Ponto* p1 = new Ponto();
+    p1->x = cx;
+    p1->y = 0.0;
+    p1->z = cz;
+
+    Ponto* p2 = new Ponto();
+    p2->x = cx;
+    p2->y = 0.0;
+    p2->z = -cz;
+
+    Ponto* p3 = new Ponto();
+    p3->x = -cx;
+    p3->y = 0.0;
+    p3->z = -cz;
+
+    pontos.push_back(p1);
+    pontos.push_back(p2);
+    pontos.push_back(p3);
+
+    Ponto* temp = new Ponto();
+    Ponto* temp2 = new Ponto();
+    diffP(p2,p1,temp);
+    diffP(p3,p1,temp2);
+    Ponto* np = new Ponto();
+    crossP(temp,temp2,np);
+    delete(temp);
+    delete(temp2);
+    normalizeP(np);
+    Ponto* np1 = new Ponto();
+    Ponto* np2 = new Ponto();
+    copyP(np,np1);
+    copyP(np,np2);
+    normals.push_back(np);
+    normals.push_back(np1);
+    normals.push_back(np2);
+    Ponto*tp1 = new Ponto();
+    Ponto*tp2 = new Ponto();
+    Ponto*tp3 = new Ponto();
+    tp1->x =0;
+    tp1->y =0;
+    tp1->z =0;
+    tp2->x =0;
+    tp2->y =0;
+    tp2->z =0;
+    tp3->x =0;
+    tp3->y =0;
+    tp3->z =0;
+    textcoords.push_back(tp1);
+    textcoords.push_back(tp2);
+    textcoords.push_back(tp3);
+
+    p1 = new Ponto();
+    p1->x = cx;
+    p1->y = 0.0;
+    p1->z = cz;
+
+    p2 = new Ponto();
+    p2->x = -cx;
+    p2->y = 0.0;
+    p2->z = -cz;
+
+    p3 = new Ponto();
+    p3->x = -cx;
+    p3->y = 0.0;
+    p3->z = cz;
+
+
+    pontos.push_back(p1);
+    pontos.push_back(p2);
+    pontos.push_back(p3);
+
+    temp = new Ponto();
+    temp2 = new Ponto();
+    diffP(p2,p1,temp);
+    diffP(p3,p1,temp2);
+    np = new Ponto();
+    crossP(temp,temp2,np);
+    delete(temp);
+    delete(temp2);
+    normalizeP(np);
+     np1 = new Ponto();
+     np2 = new Ponto();
+    copyP(np,np1);
+    copyP(np,np2);
+    normals.push_back(np);
+    normals.push_back(np1);
+    normals.push_back(np2);
+    tp1 = new Ponto();
+    tp2 = new Ponto();
+    tp3 = new Ponto();
+    tp1->x =0;
+    tp1->y =0;
+    tp1->z =0;
+    tp2->x =0;
+    tp2->y =0;
+    tp2->z =0;
+    tp3->x =0;
+    tp3->y =0;
+    tp3->z =0;
+    textcoords.push_back(tp1);
+    textcoords.push_back(tp2);
+    textcoords.push_back(tp3);
+
+    calcNormals(&pontos,&normals);
+    prinTofile(&pontos,&normals,&textcoords,file);
+
+/*
     f << cx << ' ' << 0.0 << ' ' << cz << '\n'
     	<< cx << ' ' << 0.0 << ' ' << -cz << '\n'
     	<< -cx << ' ' << 0.0 << ' ' << -cz << '\n'
+
       << cx << ' ' << 0.0 << ' ' << cz << '\n'
       << -cx << ' ' << 0.0 << ' ' << -cz << '\n'
-      << -cx << ' ' << 0.0 << ' ' << cz << '\n';
-  }
-  f.close();
+      << -cx << ' ' << 0.0 << ' ' << cz << '\n';*/
+
 
 }
 
@@ -52,66 +239,647 @@ void make_Box (float comprimento, float largura, float altura, int divisoes, con
   float rx = comprimento/divisoes;
 	float rz = largura/divisoes;
 	float ry = altura/divisoes;
-  ofstream f (file,ios::out| ios::trunc );
-  if(f.is_open()){
+    vector<Ponto*> pontos;
+    vector<Ponto*> normals;
+    vector<Ponto*> textcoords;
     for (i = 0; i < divisoes; i++) {
     for (j = 0; j < divisoes; j++) {
+
+
       //face da frente
-      f << -cx + j*rx << ' ' << -cy + i*ry << ' ' << cz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy + i*ry << ' ' << cz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy + i*ry + ry << ' ' <<  cz << '\n'
+      Ponto* p1 = new Ponto();
+      p1->x = -cx + j*rx;
+      p1->y = -cy + i*ry;
+      p1->z = cz;
 
-        << -cx + j*rx << ' ' << -cy + i*ry << ' ' << cz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy + i*ry + ry << ' ' << cz << '\n'
-        << -cx + j*rx << ' ' << -cy + i*ry << ' ' << cz << '\n';
+      Ponto* p2 = new Ponto();
+      p2->x = -cx + j*rx + rx;
+      p2->y = -cy + i*ry;
+      p2->z = cz;
 
-        // face de cima
-      f << -cx + j*rx << ' ' << cy << ' ' << cz - i*rz << '\n'
-        << -cx + j*rx + rx << ' ' << cy << ' ' << cz - i*rz << '\n'
-        << -cx + j*rx + rx << ' ' << cy << ' ' << cz - i*rz - rz << '\n'
+      Ponto* p3 = new Ponto();
+      p3->x = -cx + j*rx;
+      p3->y = -cy + i*ry + ry;
+      p3->z = cz;
 
-        << -cx + j*rx << ' ' << cy << ' ' <<  cz - i*rz << '\n'
-        << -cx + j*rx + rx << ' ' << cy << ' ' <<  cz - i*rz - rz << '\n'
-        << -cx + j*rx << ' ' <<  cy << ' ' << cz - i*rz - rz << '\n';
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
 
-      // face de trás
-      f << -cx + j*rx << ' ' << -cy + i*ry << ' ' << -cz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy + i*ry + ry << ' ' << -cz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy + i*ry << ' ' << -cz << '\n'
+      Ponto* temp = new Ponto();
+      Ponto* temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+      Ponto* np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+      Ponto* np1 = new Ponto();
+      Ponto* np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      Ponto*tp1 = new Ponto();
+      Ponto*tp2 = new Ponto();
+      Ponto*tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
 
-        << -cx + j*rx << ' ' << -cy + i*ry << ' ' << -cz << '\n'
-        << -cx + j*rx << ' ' << -cy + i*ry + ry << ' ' << -cz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy + i*ry + ry << ' ' << -cz << '\n';
-      // face de baixo
-      f << -cx + j*rx << ' ' << -cy << ' ' << cz - i*rz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy << ' ' << cz - i*rz - rz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy << ' ' << cz - i*rz << '\n'
 
-        << -cx + j*rx << ' ' << -cy << ' ' << cz - i*rz << '\n'
-        << -cx + j*rx << ' ' << -cy << ' ' << cz - i*rz - rz << '\n'
-        << -cx + j*rx + rx << ' ' << -cy << ' ' << cz - i*rz - rz << '\n';
-      // face da esquerda
-      f << -cx << ' ' << -cy + i*ry << ' ' << cz - j*rz << '\n'
-        << -cx << ' ' << -cy + i*ry +ry << ' ' << cz - j*rz - rz << '\n'
-        << -cx << ' ' << -cy + i*ry << ' ' << cz - j*rz - rz << '\n'
+      p1 = new Ponto();
+      p1->x =  -cx + j*rx;
+      p1->y = -cy + i*ry;
+      p1->z = cz;
 
-        << -cx << ' ' << -cy + i*ry << ' ' << cz - j*rz << '\n'
-        << -cx << ' ' << -cy + i*ry +ry << ' ' << cz - j*rz << '\n'
-        << -cx << ' ' << -cy + i*ry +ry << ' ' << cz - j*rz - rz  << '\n';
-      // face da direita
-      f << cx << ' ' << -cy + i*ry +ry << ' ' << cz - j*rz - rz << '\n'
-        << cx << ' ' << -cy + i*ry << ' ' << cz - j*rz << '\n'
-        << cx << ' ' << -cy + i*ry << ' ' << cz - j*rz - rz << '\n'
+      p2 = new Ponto();
+      p2->x = -cx + j*rx + rx;
+      p2->y = -cy + i*ry + ry;
+      p2->z = cz;
 
-        << cx << ' ' << -cy + i*ry << ' ' << cz - j*rz << '\n'
-        << cx << ' ' << -cy + i*ry +ry << ' ' << cz - j*rz - rz << '\n'
-        << cx << ' ' << -cy + i*ry +ry << ' ' << cz - j*rz << '\n';
+      p3 = new Ponto();
+      p3->x = -cx + j*rx;
+      p3->y = -cy + i*ry;
+      p3->z = cz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+      temp = new Ponto();
+      temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      //face de cima
+      p1 = new Ponto();
+      p1->x = -cx + j*rx;
+      p1->y = cy;
+      p1->z = cz - i*rz;
+
+      p2 = new Ponto();
+      p2->x = -cx + j*rx + rx;
+      p2->y = cy;
+      p2->z = cz - i*rz;
+
+      p3 = new Ponto();
+      p3->x = -cx + j*rx + rx;
+      p3->y = cy;
+      p3->z = cz - i*rz - rz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      p1 = new Ponto();
+      p1->x = -cx + j*rx;
+      p1->y = cy;
+      p1->z = cz - i*rz;
+
+      p2 = new Ponto();
+      p2->x = -cx + j*rx + rx;
+      p2->y = cy;
+      p2->z = cz - i*rz - rz;
+
+      p3 = new Ponto();
+      p3->x = -cx + j*rx;
+      p3->y = cy;
+      p3->z = cz - i*rz - rz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      //face de trás
+
+      p1 = new Ponto();
+      p1->x = -cx + j*rx;
+      p1->y = -cy + i*ry;
+      p1->z = -cz;
+
+      p2 = new Ponto();
+      p2->x = -cx + j*rx + rx;
+      p2->y = -cy + i*ry + ry;
+      p2->z = -cz;
+
+      p3 = new Ponto();
+      p3->x = -cx + j*rx + rx;
+      p3->y = -cy + i*ry;
+      p3->z = -cz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      p1 = new Ponto();
+      p1->x = -cx + j*rx;
+      p1->y = -cy + i*ry;
+      p1->z = -cz;
+
+      p2 = new Ponto();
+      p2->x = -cx + j*rx;
+      p2->y = -cy + i*ry + ry;
+      p2->z = -cz;
+
+      p3 = new Ponto();
+      p3->x = -cx + j*rx + rx;
+      p3->y = -cy + i*ry + ry;
+      p3->z = -cz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      //face de baixo
+      p1 = new Ponto();
+      p1->x = -cx + j*rx;
+      p1->y = -cy;
+      p1->z = cz - i*rz;
+
+      p2 = new Ponto();
+      p2->x = -cx + j*rx + rx;
+      p2->y = -cy;
+      p2->z = cz - i*rz - rz;
+
+      p3 = new Ponto();
+      p3->x = -cx + j*rx + rx;
+      p3->y = -cy;
+      p3->z = cz - i*rz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      p1 = new Ponto();
+      p1->x = -cx + j*rx;
+      p1->y = -cy;
+      p1->z = cz - i*rz;
+
+      p2 = new Ponto();
+      p2->x = -cx + j*rx;
+      p2->y = -cy;
+      p2->z = cz - i*rz - rz;
+
+      p3 = new Ponto();
+      p3->x = -cx + j*rx + rx;
+      p3->y = -cy;
+      p3->z = cz - i*rz - rz;
+
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      //face da esquerda
+      p1 = new Ponto();
+      p1->x = -cx;
+      p1->y = -cy + i*ry;
+      p1->z = cz - j*rz;
+
+      p2 = new Ponto();
+      p2->x = -cx;
+      p2->y = -cy + i*ry +ry;
+      p2->z = cz - j*rz - rz;
+
+      p3 = new Ponto();
+      p3->x = -cx;
+      p3->y = -cy + i*ry;
+      p3->z = cz - j*rz - rz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+      p1 = new Ponto();
+      p1->x = -cx;
+      p1->y = -cy + i*ry;
+      p1->z = cz - j*rz;
+
+      p2 = new Ponto();
+      p2->x = -cx;
+      p2->y = -cy + i*ry +ry;
+      p2->z = cz - j*rz;
+
+      p3 = new Ponto();
+      p3->x = -cx;
+      p3->y = -cy + i*ry +ry;
+      p3->z = cz - j*rz - rz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      //face direita
+      p1 = new Ponto();
+      p1->x = cx;
+      p1->y = -cy + i*ry +ry;
+      p1->z = cz - j*rz - rz;
+
+      p2 = new Ponto();
+      p2->x = cx;
+      p2->y = -cy + i*ry;
+      p2->z = cz - j*rz;
+
+      p3 = new Ponto();
+      p3->x = cx;
+      p3->y = -cy + i*ry;
+      p3->z = cz - j*rz - rz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+      p1 = new Ponto();
+      p1->x = cx;
+      p1->y = -cy + i*ry;
+      p1->z = cz - j*rz;
+
+      p2 = new Ponto();
+      p2->x = cx;
+      p2->y = -cy + i*ry +ry;
+      p2->z = cz - j*rz - rz;
+
+      p3 = new Ponto();
+      p3->x = cx;
+      p3->y = -cy + i*ry +ry;
+      p3->z = cz - j*rz;
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+       temp = new Ponto();
+       temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+       np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+       np1 = new Ponto();
+       np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
       }
 
     }
-
-  }
-  f.close();
+    calcNormals(&pontos,&normals);
+    prinTofile(&pontos,&normals,&textcoords,file);
 
 }
 
@@ -262,15 +1030,70 @@ void make_Cone(float radius, float height, int slices, int stacks, const char* f
     float ang_slices = 2 * M_PI / slices;
 		float tempangulo;
 		float tempradius;
-    ofstream f (file,ios::out| ios::trunc );
-    if(f.is_open()){
+    vector<Ponto*> pontos;
+    vector<Ponto*> normals;
+    vector<Ponto*> textcoords;
+
 
   	//base
         for(i=0; i<slices; i++){
           tempangulo = i*ang_slices;
+
+          Ponto* p1 = new Ponto();
+          p1->x = radius * sin(tempangulo);
+          p1->y = 0;
+          p1->z = radius * cos(tempangulo);
+
+          Ponto* p2 = new Ponto();
+          p2->x = 0;
+          p2->y = 0;
+          p2->z = 0;
+
+          Ponto* p3 = new Ponto();
+          p3->x = radius * sin(tempangulo + ang_slices);
+          p3->y = 0;
+          p3->z = radius * cos(tempangulo + ang_slices);
+
+          pontos.push_back(p1);
+          pontos.push_back(p2);
+          pontos.push_back(p3);
+
+          Ponto* temp = new Ponto();
+          Ponto* temp2 = new Ponto();
+          diffP(p2,p1,temp);
+          diffP(p3,p1,temp2);
+          Ponto* np = new Ponto();
+          crossP(temp,temp2,np);
+          delete(temp);
+          delete(temp2);
+          normalizeP(np);
+          Ponto* np1 = new Ponto();
+          Ponto* np2 = new Ponto();
+          copyP(np,np1);
+          copyP(np,np2);
+          normals.push_back(np);
+          normals.push_back(np1);
+          normals.push_back(np2);
+          Ponto*tp1 = new Ponto();
+          Ponto*tp2 = new Ponto();
+          Ponto*tp3 = new Ponto();
+          tp1->x =0;
+          tp1->y =0;
+          tp1->z =0;
+          tp2->x =0;
+          tp2->y =0;
+          tp2->z =0;
+          tp3->x =0;
+          tp3->y =0;
+          tp3->z =0;
+          textcoords.push_back(tp1);
+          textcoords.push_back(tp2);
+          textcoords.push_back(tp3);
+
+/*
           f << radius * sin(tempangulo) << ' ' << 0 << ' '<< radius * cos(tempangulo) << '\n'
             << 0 << ' ' << 0 << ' ' << 0 << '\n'
-            << radius * sin(tempangulo + ang_slices) << ' ' << 0 << ' ' << radius * cos(tempangulo + ang_slices) << '\n';
+            << radius * sin(tempangulo + ang_slices) << ' ' << 0 << ' ' << radius * cos(tempangulo + ang_slices) << '\n';*/
 
 					}
 
@@ -279,24 +1102,118 @@ void make_Cone(float radius, float height, int slices, int stacks, const char* f
 			for(j=0; j<stacks; j++){
 				for(i=0; i<slices; i++){
 					tempangulo = i*ang_slices;
-          f << (radius - j*tempradius)*sin(tempangulo) << ' ' << alt_stacks*j << ' ' << (radius - j*tempradius)*cos(tempangulo) << '\n'
 
-           << (radius - j*tempradius)*sin(tempangulo + ang_slices) << ' ' <<  alt_stacks*j << ' ' << (radius - j*tempradius)*cos(tempangulo + ang_slices) << '\n'
+          Ponto* p1 = new Ponto();
+          p1->x = (radius - j*tempradius)*sin(tempangulo);
+          p1->y= alt_stacks*j;
+          p1->z = (radius - j*tempradius)*cos(tempangulo);
 
-           << (radius - j*tempradius - tempradius)*sin(tempangulo + ang_slices) << ' ' << alt_stacks*j + alt_stacks << ' ' << (radius - j*tempradius - tempradius)*cos(tempangulo + ang_slices) << '\n'
 
-           << (radius - j*tempradius)*sin(tempangulo) << ' ' << alt_stacks*j << ' ' << (radius - j*tempradius)*cos(tempangulo) << '\n'
+          Ponto* p2 = new Ponto();
+          p2->x = (radius - j*tempradius)*sin(tempangulo + ang_slices);
+          p2->y = alt_stacks*j;
+          p2->z = (radius - j*tempradius)*cos(tempangulo + ang_slices);
 
-           << (radius - j*tempradius - tempradius)*sin(tempangulo + ang_slices) << ' ' << alt_stacks*j + alt_stacks << ' ' << (radius - j*tempradius - tempradius)*cos(tempangulo + ang_slices) << '\n'
 
-           << (radius - j*tempradius - tempradius)*sin(tempangulo) << ' ' << alt_stacks*j + alt_stacks << ' ' << (radius - j*tempradius - tempradius)*cos(tempangulo) << '\n';
+          Ponto* p3= new Ponto();
+          p3->x = (radius - j*tempradius - tempradius)*sin(tempangulo + ang_slices);
+          p3->y = alt_stacks*j + alt_stacks;
+          p3->z= (radius - j*tempradius - tempradius)*cos(tempangulo + ang_slices);
+
+
+          pontos.push_back(p1);
+          pontos.push_back(p2);
+          pontos.push_back(p3);
+
+          Ponto* temp = new Ponto();
+          Ponto* temp2 = new Ponto();
+          diffP(p2,p1,temp);
+          diffP(p3,p1,temp2);
+          Ponto* np = new Ponto();
+          crossP(temp,temp2,np);
+          delete(temp);
+          delete(temp2);
+          normalizeP(np);
+          Ponto* np1 = new Ponto();
+          Ponto* np2 = new Ponto();
+          copyP(np,np1);
+          copyP(np,np2);
+          normals.push_back(np);
+          normals.push_back(np1);
+          normals.push_back(np2);
+          Ponto*tp1 = new Ponto();
+          Ponto*tp2 = new Ponto();
+          Ponto*tp3 = new Ponto();
+          tp1->x =0;
+          tp1->y =0;
+          tp1->z =0;
+          tp2->x =0;
+          tp2->y =0;
+          tp2->z =0;
+          tp3->x =0;
+          tp3->y =0;
+          tp3->z =0;
+          textcoords.push_back(tp1);
+          textcoords.push_back(tp2);
+          textcoords.push_back(tp3);
+
+
+          p1 = new Ponto();
+          p1->x = (radius - j*tempradius)*sin(tempangulo);
+          p1->y = alt_stacks*j;
+          p1->z = (radius - j*tempradius)*cos(tempangulo);
+
+          p2 = new Ponto();
+          p2->x = (radius - j*tempradius - tempradius)*sin(tempangulo + ang_slices);
+          p2->y = alt_stacks*j + alt_stacks;
+          p2->z = (radius - j*tempradius - tempradius)*cos(tempangulo + ang_slices);
+
+          p3 = new Ponto();
+          p3->x = (radius - j*tempradius - tempradius)*sin(tempangulo);
+          p3->y = alt_stacks*j + alt_stacks;
+          p3->z = (radius - j*tempradius - tempradius)*cos(tempangulo);
+
+          pontos.push_back(p1);
+          pontos.push_back(p2);
+          pontos.push_back(p3);
+
+          temp = new Ponto();
+          temp2 = new Ponto();
+          diffP(p2,p1,temp);
+          diffP(p3,p1,temp2);
+          np = new Ponto();
+          crossP(temp,temp2,np);
+          delete(temp);
+          delete(temp2);
+          normalizeP(np);
+          np1 = new Ponto();
+          np2 = new Ponto();
+          copyP(np,np1);
+          copyP(np,np2);
+          normals.push_back(np);
+          normals.push_back(np1);
+          normals.push_back(np2);
+          tp1 = new Ponto();
+          tp2 = new Ponto();
+          tp3 = new Ponto();
+          tp1->x =0;
+          tp1->y =0;
+          tp1->z =0;
+          tp2->x =0;
+          tp2->y =0;
+          tp2->z =0;
+          tp3->x =0;
+          tp3->y =0;
+          tp3->z =0;
+          textcoords.push_back(tp1);
+          textcoords.push_back(tp2);
+          textcoords.push_back(tp3);
 
 
 				}
 			}
-    }
-    f.close();
-
+        calcNormals(&pontos,&normals);
+        prinTofile(&pontos,&normals,&textcoords,file);
 }
 
 
@@ -307,29 +1224,231 @@ void make_Cylinder(float radius, float height, int slices, const char* file) {
 float n_angle = 2 * M_PI / slices; //angulo de casa slice
 float angle;
 ofstream f (file,ios::out| ios::trunc );
-if(f.is_open()){
+vector<Ponto*> pontos;
+vector<Ponto*> normals;
+vector<Ponto*> textcoords;
+
 for(int i = 0; i < slices; i++){
     angle = n_angle * i;
+
     //base de cima
-    f << radius * cos(angle) << ' ' << height/2 << ' ' << radius * sin(angle) << '\n'
-      << 0 << ' ' << height/2 << ' ' << 0 << '\n'
-      << radius*cos(angle + n_angle) << ' ' << height/2 << ' ' << radius * sin(angle + n_angle) << '\n'
-      //lateral (triangulos virados para baixo)
-      << radius * cos(angle) << ' ' << height/2 << ' ' << radius * sin(angle) << '\n'
-      << radius*cos(angle + n_angle) << ' ' << height/2 << ' ' << radius * sin(angle + n_angle) << '\n'
-      << radius * cos(angle) << ' ' << -height/2 << ' ' << radius * sin(angle) << '\n'
-      //lateral (triangulos virados para cima)
-      << radius*cos(angle + n_angle) << ' ' << height/2 << ' ' << radius * sin(angle + n_angle) << '\n'
-      << radius*cos(angle + n_angle) << ' ' << -height/2 << ' ' << radius * sin(angle + n_angle) << '\n'
-      << radius * cos(angle) << ' ' << -height/2 << ' ' << radius * sin(angle) << '\n'
+      Ponto* p1 = new Ponto();
+      p1->x = radius * cos(angle);
+      p1->y = height/2;
+      p1->z = radius * sin(angle);
+
+      Ponto* p2 = new Ponto();
+      p2->x = 0;
+      p2->y = height/2;
+      p2->z = 0;
+
+      Ponto* p3 = new Ponto();
+      p3->x = radius*cos(angle + n_angle);
+      p3->y = height/2;
+      p3->z = radius * sin(angle + n_angle);
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+      Ponto* temp = new Ponto();
+      Ponto* temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+      Ponto* np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+      Ponto* np1 = new Ponto();
+      Ponto* np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      Ponto*tp1 = new Ponto();
+      Ponto*tp2 = new Ponto();
+      Ponto*tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
+      //lateral
+      p1 = new Ponto();
+      p1->x = radius * cos(angle);
+      p1->y = height/2;
+      p1->z = radius * sin(angle);
+
+      p2 = new Ponto();
+      p2->x = radius*cos(angle + n_angle);
+      p2->y = height/2;
+      p2->z = radius * sin(angle + n_angle);
+
+
+      p3 = new Ponto();
+      p3->x = radius * cos(angle);
+      p3->y = -height/2;
+      p3->z = radius * sin(angle);
+
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+      temp = new Ponto();
+      temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+      np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+      np1 = new Ponto();
+      np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+      //lateral
+      p1 = new Ponto();
+      p1->x = radius*cos(angle + n_angle);
+      p1->y = height/2;
+      p1->z = radius * sin(angle + n_angle);
+
+      p2 = new Ponto();
+      p2->x = radius*cos(angle + n_angle);
+      p2->y = -height/2;
+      p2->z = radius * sin(angle + n_angle);
+
+      p3 = new Ponto();
+      p3->x = radius * cos(angle);
+      p3->y = -height/2;
+      p3->z = radius * sin(angle);
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+      temp = new Ponto();
+      temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+      np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+      np1 = new Ponto();
+      np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
       //base de baixo
-      << 0 << ' ' << -height/2 << ' ' << 0 << '\n'
-      << radius * cos(angle) << ' ' << -height/2 << ' ' << radius * sin(angle) << '\n'
-      << radius*cos(angle + n_angle) << ' ' << -height/2 << ' ' << radius * sin(angle + n_angle) << '\n';
+
+      p1 = new Ponto();
+      p1->x = 0;
+      p1->y = -height/2;
+      p1->z = 0;
+
+      p2 = new Ponto();
+      p2->x = radius * cos(angle);
+      p2->y = -height/2;
+      p2->z = radius * sin(angle);
+
+      p3 = new Ponto();
+      p3->x = radius*cos(angle + n_angle);
+      p3->y = -height/2;
+      p3->z = radius * sin(angle + n_angle);
+
+      pontos.push_back(p1);
+      pontos.push_back(p2);
+      pontos.push_back(p3);
+
+      temp = new Ponto();
+      temp2 = new Ponto();
+      diffP(p2,p1,temp);
+      diffP(p3,p1,temp2);
+      np = new Ponto();
+      crossP(temp,temp2,np);
+      delete(temp);
+      delete(temp2);
+      normalizeP(np);
+      np1 = new Ponto();
+      np2 = new Ponto();
+      copyP(np,np1);
+      copyP(np,np2);
+      normals.push_back(np);
+      normals.push_back(np1);
+      normals.push_back(np2);
+      tp1 = new Ponto();
+      tp2 = new Ponto();
+      tp3 = new Ponto();
+      tp1->x =0;
+      tp1->y =0;
+      tp1->z =0;
+      tp2->x =0;
+      tp2->y =0;
+      tp2->z =0;
+      tp3->x =0;
+      tp3->y =0;
+      tp3->z =0;
+      textcoords.push_back(tp1);
+      textcoords.push_back(tp2);
+      textcoords.push_back(tp3);
+
+
 
   }
-}
-  f.close();
+
+calcNormals(&pontos,&normals);
+prinTofile(&pontos,&normals,&textcoords,file);
 }
 
 void make_Torus(float inside_radius, float outside_radius, int slices, int stacks, const char* file){
@@ -337,13 +1456,121 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
   float a = 2*M_PI/slices;
   float b = 2*M_PI/stacks;
 
-  ofstream f (file,ios::out| ios::trunc );
-  if(f.is_open()){
+  vector<Ponto*> pontos;
+  vector<Ponto*> normals;
+  vector<Ponto*> textcoords;
+
     for(int i = 0; i<slices; i++){
       alfa = i * a;
 
       for(int j = 0; j <= stacks; j++){
         beta = j * b;
+
+        Ponto* p1 = new Ponto();
+        p1->x = (outside_radius + inside_radius * cos(beta + b)) * cos(alfa);
+        p1->y = inside_radius * sin(beta + b);
+        p1->z = (outside_radius + inside_radius *cos(beta + b)) * sin(alfa);
+
+        Ponto* p2 = new Ponto();
+        p2->x = (outside_radius + inside_radius * cos(beta + b)) * cos(alfa + a);
+        p2->y = inside_radius * sin(beta + b);
+        p2->z = (outside_radius + inside_radius * cos(beta + b)) * sin(alfa + a);
+
+        Ponto* p3 = new Ponto();
+        p3->x = (outside_radius + inside_radius * cos(beta)) * cos(alfa + a);
+        p3->y = inside_radius * sin(beta);
+        p3->z = (outside_radius + inside_radius * cos(beta)) * sin(alfa + a);
+
+
+        pontos.push_back(p1);
+        pontos.push_back(p2);
+        pontos.push_back(p3);
+
+        Ponto* temp = new Ponto();
+        Ponto* temp2 = new Ponto();
+        diffP(p2,p1,temp);
+        diffP(p3,p1,temp2);
+        Ponto* np = new Ponto();
+        crossP(temp,temp2,np);
+        delete(temp);
+        delete(temp2);
+        normalizeP(np);
+        Ponto* np1 = new Ponto();
+        Ponto* np2 = new Ponto();
+        copyP(np,np1);
+        copyP(np,np2);
+        normals.push_back(np);
+        normals.push_back(np1);
+        normals.push_back(np2);
+        Ponto*tp1 = new Ponto();
+        Ponto*tp2 = new Ponto();
+        Ponto*tp3 = new Ponto();
+        tp1->x =0;
+        tp1->y =0;
+        tp1->z =0;
+        tp2->x =0;
+        tp2->y =0;
+        tp2->z =0;
+        tp3->x =0;
+        tp3->y =0;
+        tp3->z =0;
+        textcoords.push_back(tp1);
+        textcoords.push_back(tp2);
+        textcoords.push_back(tp3);
+
+
+        p1 = new Ponto();
+        p1->x = (outside_radius + inside_radius * cos(beta)) * cos(alfa);
+        p1->y = inside_radius * sin(beta);
+        p1->z = (outside_radius + inside_radius * cos(beta)) * sin(alfa);
+
+        p2 = new Ponto();
+        p2->x = (outside_radius + inside_radius * cos(beta + b)) * cos(alfa);
+        p2->y = inside_radius * sin(beta + b);
+        p2->z = (outside_radius + inside_radius * cos(beta + b)) * sin(alfa);
+
+        p3 = new Ponto();
+        p3->x = (outside_radius + inside_radius * cos(beta)) * cos(alfa + a);
+        p3->y = inside_radius * sin(beta);
+        p3->z = (outside_radius + inside_radius * cos(beta)) * sin(alfa + a);
+
+        pontos.push_back(p1);
+        pontos.push_back(p2);
+        pontos.push_back(p3);
+
+        temp = new Ponto();
+        temp2 = new Ponto();
+        diffP(p2,p1,temp);
+        diffP(p3,p1,temp2);
+        np = new Ponto();
+        crossP(temp,temp2,np);
+        delete(temp);
+        delete(temp2);
+        normalizeP(np);
+        np1 = new Ponto();
+        np2 = new Ponto();
+        copyP(np,np1);
+        copyP(np,np2);
+        normals.push_back(np);
+        normals.push_back(np1);
+        normals.push_back(np2);
+        tp1 = new Ponto();
+        tp2 = new Ponto();
+        tp3 = new Ponto();
+        tp1->x =0;
+        tp1->y =0;
+        tp1->z =0;
+        tp2->x =0;
+        tp2->y =0;
+        tp2->z =0;
+        tp3->x =0;
+        tp3->y =0;
+        tp3->z =0;
+        textcoords.push_back(tp1);
+        textcoords.push_back(tp2);
+        textcoords.push_back(tp3);
+
+        /*
         f
           << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius *cos(beta + b)) * sin(alfa) << '\n'
           << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa + a) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius * cos(beta + b)) * sin(alfa + a) << '\n'
@@ -351,13 +1578,14 @@ void make_Torus(float inside_radius, float outside_radius, int slices, int stack
 
           << (outside_radius + inside_radius * cos(beta)) * cos(alfa) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa) << '\n'
           << (outside_radius + inside_radius * cos(beta + b)) * cos(alfa) << ' ' << inside_radius * sin(beta + b) << ' ' << (outside_radius + inside_radius * cos(beta + b)) * sin(alfa) << '\n'
-          << (outside_radius + inside_radius * cos(beta)) * cos(alfa + a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa + a) << '\n';
+          << (outside_radius + inside_radius * cos(beta)) * cos(alfa + a) << ' ' << inside_radius * sin(beta) << ' ' << (outside_radius + inside_radius * cos(beta)) * sin(alfa + a) << '\n'; */
 
 
       }
     }
-  }
-      f.close();
+
+    calcNormals(&pontos,&normals);
+    prinTofile(&pontos,&normals,&textcoords,file);
 }
 
 
@@ -375,6 +1603,7 @@ vector<string> split(const string& s, char delimiter)
     }
     return tokens;
 }
+
 
 
 
@@ -407,13 +1636,10 @@ Ponto* pontosBezier(float *p1, float *p2, float *p3, float *p4, float t){
 
 
 
-
-
-
 //ver slides das curvas - bezier patches (pontos verdes- control points e ponto vermelho- ponto no patch)
 //nos patches usa-se o u em vez do t
 //temos que obter 4 pontos (control points) para o calculo de bezier
-Ponto* calcBezierPatch(std::vector<Ponto> controlPoints, int np, float u, float v){
+Ponto* calcBezierPatch(vector<Ponto> controlPoints, int np, float u, float v){
     int n = 16;
     float aux[n][3], res[n][3];
     Ponto *p, *ponto;
@@ -442,119 +1668,194 @@ Ponto* calcBezierPatch(std::vector<Ponto> controlPoints, int np, float u, float 
 }
 
 
-// No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
-// função para fazer parse do ficheiro
-// void bezier_patches(int tesselation, const char* file, const char* file2) {
-//   std::ifstream f;
-//   f.open(file);
-//
-//   int nBezier = 0;
-//   int ncontrolPoints = 0;
-//   int bezier = 0;
-//   int i,j;
-//   string aux,aux2;
-//   std::vector<Ponto> pontos;
-//
-//
-//   if ( f.is_open() ) {
-//
-//       getline(f, aux);
-//       nBezier = stoi(aux);
-//
-//       std::vector<string> tokens;
-//
-//       //de 0 a 31 -> indices dos pontos controlo, 16 cada
-//         for( i = 0; i < nBezier ;i++ ) {
-//           std::string line;
-//           getline(f,line);
-//           tokens = split(line, ' ');
-//           for( j = 0; j < nPatch ; j++ ) {
-//             indices[i][j] = stoi(tokens[j],nullptr);
-//
-//           }
-//           //int aux2 = stoi(line);
-//           for( int u = 0; u < tokens.size(); u++){
-//             indices[i][u] = stoi(tokens[u]);
-//           }
-//         }
-//
-//     getline(f,aux2);
-//     ncontrolPoints = stoi(aux2); //nmr de control points
-//     for( int z = 0; z < ncontrolPoints; z++ ){
-//       std::string line1;
-//       getline(f,line1);
-//       tokens = split(line1, ',');
-//       pontos.reserve(ncontrolPoints);
-//       Ponto *p = new Ponto();
-//       (*p).x = stof(tokens[0],nullptr);
-//       (*p).y = stof(tokens[1],nullptr);
-//       (*p).z = stof(tokens[2],nullptr);
-//       pontos.push_back(*p);
-//     }
-//   }
-//
-//   f.close();
-//
-//
-//   float u1, v1, u2, v2, inc = 1.0/tesselation;
-//   Ponto* res[nBezier][4];
-//   Shape* shape = new Shape();
-//
-//   for(int i=0; i<nBezier; i++){
-//     for(int j=0; j<tesselation; j++){
-//       for(int w=0; w<tesselation; w++){
-//           u1 = j*inc;
-//           v1 = w*inc;
-//           u2 = (j+1)*inc;
-//           v2 = (w+1)*inc;
-//
-//           res[i][0] = calcBezierPatch(pontos, i, u1, v1);
-//           res[i][1] = calcBezierPatch(pontos, i, u2, v1);
-//           res[i][2] = calcBezierPatch(pontos, i, u1, v2);
-//           res[i][3] = calcBezierPatch(pontos, i, u2,v2);
-//
-//
-//
-//           Ponto *p0 = new Ponto();
-//           (*p0).x = (res[i][0])->x;
-//           (*p0).y = (res[i][0])->y;
-//           (*p0).z = (res[i][0])->z;
-//
-//           Ponto *p1 = new Ponto();
-//           (*p1).x = (res[i][1])->x;
-//           (*p1).y = (res[i][1])->y;
-//           (*p1).z = (res[i][1])->z;
-//
-//           Ponto *p3 = new Ponto();
-//           (*p3).x = (res[i][3])->x;
-//           (*p3).y = (res[i][3])->y;
-//           (*p3).z = (res[i][3])->z;
-//
-//
-//           Ponto *p2 = new Ponto();
-//           (*p2).x = (res[i][2])->x;
-//           (*p2).y = (res[i][2])->y;
-//           (*p2).z = (res[i][2])->z;
-//
-//
-//           //0,1,3
-//           shape->inserePonto(p0);
-//           shape->inserePonto(p1);
-//           shape->inserePonto(p3);
-//           //0,3,2
-//           shape->inserePonto(p0);
-//           shape->inserePonto(p3);
-//           shape->inserePonto(p2);
-//
-//
-//       }
-//     }
-//   }
-//
-//   shape->print(file2);
-//
-//
-// }
+//No ficheiro irão estar descritos os pontos de controlo e o valor da tesselation
+//função para fazer parse do ficheiro
+void bezier_patches(int tesselation, const char* file, const char* file2) {
+  std::ifstream f;
+  f.open(file);
+
+  int nBezier = 0;
+  int ncontrolPoints = 0;
+  int bezier = 0;
+  int i,j;
+  string aux,aux2;
+  vector<Ponto> pontos1;
+
+
+
+  if ( f.is_open() ) {
+
+      getline(f, aux);
+      nBezier = stoi(aux);
+
+      std::vector<string> tokens;
+
+      //de 0 a 31 -> indices dos pontos controlo, 16 cada
+        for( i = 0; i < nBezier ;i++ ) {
+          std::string line;
+          getline(f,line);
+          tokens = split(line, ' ');
+          for( j = 0; j < nPatch ; j++ ) {
+            indices[i][j] = stoi(tokens[j],nullptr);
+
+          }
+          //int aux2 = stoi(line);
+          for( int u = 0; u < tokens.size(); u++){
+            indices[i][u] = stoi(tokens[u]);
+          }
+        }
+
+    getline(f,aux2);
+    ncontrolPoints = stoi(aux2); //nmr de control points
+    for( int z = 0; z < ncontrolPoints; z++ ){
+      std::string line1;
+      getline(f,line1);
+      tokens = split(line1, ',');
+      pontos1.reserve(ncontrolPoints);
+      Ponto *p = new Ponto();
+      (*p).x = stof(tokens[0],nullptr);
+      (*p).y = stof(tokens[1],nullptr);
+      (*p).z = stof(tokens[2],nullptr);
+      pontos1.push_back(*p);
+    }
+  }
+
+  f.close();
+
+  vector<Ponto*> pontos;
+  vector<Ponto*> normals;
+  vector<Ponto*> textcoords;
+  float u1, v1, u2, v2, inc = 1.0/tesselation;
+  Ponto* res[nBezier][4];
+
+  for(int i=0; i<nBezier; i++){
+    for(int j=0; j<tesselation; j++){
+      for(int w=0; w<tesselation; w++){
+          u1 = j*inc;
+          v1 = w*inc;
+          u2 = (j+1)*inc;
+          v2 = (w+1)*inc;
+
+          res[i][0] = calcBezierPatch(pontos1, i, u1, v1);
+          res[i][1] = calcBezierPatch(pontos1, i, u2, v1);
+          res[i][2] = calcBezierPatch(pontos1, i, u1, v2);
+          res[i][3] = calcBezierPatch(pontos1, i, u2,v2);
+
+
+
+          Ponto *p0 = new Ponto();
+          (*p0).x = (res[i][0])->x;
+          (*p0).y = (res[i][0])->y;
+          (*p0).z = (res[i][0])->z;
+
+          Ponto *p1 = new Ponto();
+          (*p1).x = (res[i][1])->x;
+          (*p1).y = (res[i][1])->y;
+          (*p1).z = (res[i][1])->z;
+
+          Ponto *p3 = new Ponto();
+          (*p3).x = (res[i][3])->x;
+          (*p3).y = (res[i][3])->y;
+          (*p3).z = (res[i][3])->z;
+
+
+          Ponto *p2 = new Ponto();
+          (*p2).x = (res[i][2])->x;
+          (*p2).y = (res[i][2])->y;
+          (*p2).z = (res[i][2])->z;
+
+
+          //0,1,3
+          // shape->inserePonto(p0);
+          // shape->inserePonto(p1);
+          // shape->inserePonto(p3);
+          //0,3,2
+          // shape->inserePonto(p0);
+          // shape->inserePonto(p3);
+          // shape->inserePonto(p2);
+          pontos.push_back(p0);
+          pontos.push_back(p1);
+          pontos.push_back(p3);
+
+          Ponto* temp = new Ponto();
+          Ponto* temp2 = new Ponto();
+          diffP(p1,p0,temp);
+          diffP(p3,p0,temp2);
+          Ponto* np = new Ponto();
+          crossP(temp,temp2,np);
+          delete(temp);
+          delete(temp2);
+          normalizeP(np);
+          Ponto* np1 = new Ponto();
+          Ponto* np2 = new Ponto();
+          copyP(np,np1);
+          copyP(np,np2);
+          normals.push_back(np);
+          normals.push_back(np1);
+          normals.push_back(np2);
+          Ponto*tp1 = new Ponto();
+          Ponto*tp2 = new Ponto();
+          Ponto*tp3 = new Ponto();
+          tp1->x =0;
+          tp1->y =0;
+          tp1->z =0;
+          tp2->x =0;
+          tp2->y =0;
+          tp2->z =0;
+          tp3->x =0;
+          tp3->y =0;
+          tp3->z =0;
+          textcoords.push_back(tp1);
+          textcoords.push_back(tp2);
+          textcoords.push_back(tp3);
+
+
+          pontos.push_back(p0);
+          pontos.push_back(p3);
+          pontos.push_back(p2);
+
+           temp = new Ponto();
+           temp2 = new Ponto();
+          diffP(p3,p0,temp);
+          diffP(p2,p0,temp2);
+           np = new Ponto();
+          crossP(temp,temp2,np);
+          delete(temp);
+          delete(temp2);
+          normalizeP(np);
+           np1 = new Ponto();
+           np2 = new Ponto();
+          copyP(np,np1);
+          copyP(np,np2);
+          normals.push_back(np);
+          normals.push_back(np1);
+          normals.push_back(np2);
+          tp1 = new Ponto();
+          tp2 = new Ponto();
+          tp3 = new Ponto();
+          tp1->x =0;
+          tp1->y =0;
+          tp1->z =0;
+          tp2->x =0;
+          tp2->y =0;
+          tp2->z =0;
+          tp3->x =0;
+          tp3->y =0;
+          tp3->z =0;
+          textcoords.push_back(tp1);
+          textcoords.push_back(tp2);
+          textcoords.push_back(tp3);
+
+
+      }
+    }
+  }
+
+  calcNormals(&pontos,&normals);
+  prinTofile(&pontos,&normals,&textcoords,file);
+
+
+}
 
 
 void help(){
