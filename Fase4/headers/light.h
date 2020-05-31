@@ -24,7 +24,13 @@ class Light{
 
     float* getPosicao();
     int getType();
-    Light( int type, float* posicao , float* dir, float* adds, float* ambient, float* diffuse, float* specular);
+    void addPos(float*);
+    void addDir(float*);
+    void addDiff(float*);
+    void addAmb(float*);
+    void addSpec(float*);
+    void addAdds(float*);
+    Light( int type );
     void draw();
     void print();
 

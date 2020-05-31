@@ -35,6 +35,8 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
     if(strcmp(pParm -> ToElement() -> Attribute("type"),"POINT")==0) {
       //POINT
       type = 1;
+      Light* in = new Light (type);
+
     if (pParm -> ToElement() -> Attribute("posX")){
       if (pParm -> ToElement() -> Attribute("posX")){
         posicao[0] = stof(pParm -> ToElement() -> Attribute("posX"));
@@ -47,9 +49,10 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
       if (pParm -> ToElement() -> Attribute("posZ")){
         posicao[2] = stof(pParm -> ToElement() -> Attribute("posZ"));
       }
+      posicao[3] = 1.0; //por ser um ponto de luz
 
+      (*in).addPos(posicao);
     }
-        posicao[3] = 1.0; //por ser um ponto de luz
 
       //ambient
     if (pParm -> ToElement() -> Attribute("ambX")){
@@ -65,6 +68,7 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
         ambient[2] = stof(pParm -> ToElement() -> Attribute("ambZ"));
       }
 
+      (*in).addAmb(ambient);
     }
 
       //diffuse
@@ -80,6 +84,7 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
       if (pParm -> ToElement() -> Attribute("diffZ")){
         diffuse[2] = stof(pParm -> ToElement() -> Attribute("diffZ"));
       }
+      (*in).addDiff(diffuse);
     }
 
       //specular
@@ -95,32 +100,20 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
       if (pParm -> ToElement() -> Attribute("specZ")){
         specular[2] = stof(pParm -> ToElement() -> Attribute("specZ"));
       }
+      (*in).addSpec(specular);
     }
 
-      //cutoff
-      if (pParm -> ToElement() -> Attribute("cutoff")){
-        adds[0] = stof(pParm -> ToElement() -> Attribute("cutoff"));
-      }
-      //exponent [0,128]
-      if (pParm -> ToElement() -> Attribute("exponent")){
-        adds[1] = stof(pParm -> ToElement() -> Attribute("exponent"));
-      }
-      //quadratic attenuation {0,1}
-      if (pParm -> ToElement() -> Attribute("att")){
-        adds[2] = stof(pParm -> ToElement() -> Attribute("att"));
-      }
 
-
-      Light* in = new Light (type, posicao, dir, adds, ambient, diffuse, specular);
       (*lights).push_back(in);
 
       printf("type = %d\n", type );
       for(int y = 0; y < 4;y++)
         printf("posicao [%d] %f\n", y, posicao[y] );
     }
-    else if((strcmp (pParm -> Value(), "DIRECTIONAL")) == 0){
+    else if((strcmp (pParm -> ToElement() -> Attribute("type"), "DIRECTIONAL")) == 0){
       //DIRECTIONAL
       type = 2;
+      Light* in = new Light (type);
 
     if (pParm -> ToElement() -> Attribute("posX")){
       if (pParm -> ToElement() -> Attribute("posX")){
@@ -134,8 +127,11 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
       if (pParm -> ToElement() -> Attribute("posZ")){
         posicao[2] = stof(pParm -> ToElement() -> Attribute("posZ"));
       }
+      posicao[3] = 0.0; //por ser um vetor diretor
+
+      (*in).addPos(posicao);
     }
-        posicao[3] = 0.0; //por ser um vetor diretor
+
 
       //ambient
     if (pParm -> ToElement() -> Attribute("ambX")){
@@ -150,6 +146,7 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
       if (pParm -> ToElement() -> Attribute("ambZ")){
         ambient[2] = stof(pParm -> ToElement() -> Attribute("ambZ"));
       }
+      (*in).addAmb(ambient);
     }
 
       //diffuse
@@ -165,6 +162,8 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
       if (pParm -> ToElement() -> Attribute("diffZ")){
         diffuse[2] = stof(pParm -> ToElement() -> Attribute("diffZ"));
       }
+
+      (*in).addDiff(diffuse);
     }
       //specular
     if (pParm -> ToElement() -> Attribute("specX")){
@@ -179,31 +178,34 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
       if (pParm -> ToElement() -> Attribute("specZ")){
         specular[2] = stof(pParm -> ToElement() -> Attribute("specZ"));
       }
+      (*in).addSpec(specular);
     }
 
-      //cutoff
-
-      if (pParm -> ToElement() -> Attribute("cutoff")){
-        adds[0] = stof(pParm -> ToElement() -> Attribute("cutoff"));
-      }
-
-      //exponent [0,128]
-      if (pParm -> ToElement() -> Attribute("exponent")){
-        adds[1] = stof(pParm -> ToElement() -> Attribute("exponent"));
-      }
-
-      //quadratic attenuation {0,1}
-      if (pParm -> ToElement() -> Attribute("att")){
-        adds[2] = stof(pParm -> ToElement() -> Attribute("att"));
-      }
-
-      Light* in = new Light (type, posicao, dir, adds, ambient, diffuse, specular);
-      (*lights).push_back(in);
+    (*lights).push_back(in);
 
     }
-    else if((strcmp (pParm -> Value(), "SPOT")) == 0){
+    else if((strcmp (pParm -> ToElement() -> Attribute("type"), "SPOT")) == 0){
       //SPOT
       type = 3;
+      Light* in = new Light (type);
+
+      if (pParm -> ToElement() -> Attribute("posX")){
+        if (pParm -> ToElement() -> Attribute("posX")){
+          posicao[0] = stof(pParm -> ToElement() -> Attribute("posX"));
+        }
+
+        if (pParm -> ToElement() -> Attribute("posY")){
+          posicao[1] = stof(pParm -> ToElement() -> Attribute("posY"));
+        }
+
+        if (pParm -> ToElement() -> Attribute("posZ")){
+          posicao[2] = stof(pParm -> ToElement() -> Attribute("posZ"));
+        }
+        posicao[3] = 0.0; //por ser um vetor diretor
+
+        (*in).addPos(posicao);
+      }
+
       if (pParm -> ToElement() -> Attribute("dirX")){
         if (pParm -> ToElement() -> Attribute("dirX")){
           dir[0] = stof(pParm -> ToElement() -> Attribute("dirX"));
@@ -216,8 +218,9 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
         if (pParm -> ToElement() -> Attribute("dirZ")){
           dir[2] = stof(pParm -> ToElement() -> Attribute("dirZ"));
         }
+
+        (*in).addDir(dir);
       }
-          dir[3] = 0.0; //por ser um vetor diretor
 
         //ambient
       if (pParm -> ToElement() -> Attribute("ambX")){
@@ -231,7 +234,9 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
 
         if (pParm -> ToElement() -> Attribute("ambZ")){
           ambient[2] = stof(pParm -> ToElement() -> Attribute("ambZ"));
+
         }
+        (*in).addAmb(ambient);
       }
 
         //diffuse
@@ -247,6 +252,8 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
         if (pParm -> ToElement() -> Attribute("diffZ")){
           diffuse[2] = stof(pParm -> ToElement() -> Attribute("diffZ"));
         }
+
+        (*in).addDiff(diffuse);
       }
 
         //specular
@@ -263,30 +270,43 @@ void parseLight(XMLNode* pNode, vector<Light*> *lights, instructionsMatrix* inst
         if (pParm -> ToElement() -> Attribute("specZ")){
           specular[2] = stof(pParm -> ToElement() -> Attribute("specZ"));
         }
+
+        (*in).addSpec(specular);
       }
 
         //cutoff
-        if (pParm -> ToElement() -> Attribute("cutoff")){
-          adds[0] = stof(pParm -> ToElement() -> Attribute("cutoff"));
-        }
+        if (pParm -> ToElement() -> Attribute("cutoff") ){
+          if (pParm -> ToElement() -> Attribute("cutoff")){
+            adds[0] = stof(pParm -> ToElement() -> Attribute("cutoff"));
+          }
+            adds[1] = 0;
+            adds[2] = 1;
+            (*in).addAdds(adds);
 
-        //exponent [0,128]
+        }
+          //exponent [0,128]
         if (pParm -> ToElement() -> Attribute("exponent")){
-          adds[1] = stof(pParm -> ToElement() -> Attribute("exponent"));
+          if (pParm -> ToElement() -> Attribute("exponent")){
+            adds[0] = 90;
+            adds[1] = stof(pParm -> ToElement() -> Attribute("exponent"));
+          }
+            adds[2] = 1;
+            (*in).addAdds(adds);
+
         }
 
         //quadratic attenuation {0,1}
         if (pParm -> ToElement() -> Attribute("att")){
-          adds[2] = stof(pParm -> ToElement() -> Attribute("att"));
+          if (pParm -> ToElement() -> Attribute("att")){
+            adds[0] = 90;
+            adds[1] = 0;
+            adds[2] = stof(pParm -> ToElement() -> Attribute("att"));
+          }
+          (*in).addAdds(adds);
+
         }
 
-
-        Light* in = new Light (type, posicao, dir, adds, ambient, diffuse, specular);
         (*lights).push_back(in);
-
-        printf("type = %d\n", type );
-        for(int y = 0; y < 4;y++)
-          printf("posicao [%d] %f\n", y, posicao[y] );
 
       }
     }
